@@ -29,6 +29,7 @@ from ..llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
 
 class LlavaConfig(LlamaConfig):
     model_type = "llava_llama"
+    # model_type = "llava"
 
 
 class LlavaLlamaModel(LlavaMetaModel, LlamaModel):
@@ -155,4 +156,5 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         return inputs
 
 AutoConfig.register("llava_llama", LlavaConfig)
+# AutoConfig.register("llava", LlavaConfig)
 AutoModelForCausalLM.register(LlavaConfig, LlavaLlamaForCausalLM)

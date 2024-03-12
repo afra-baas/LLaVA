@@ -146,6 +146,8 @@ class LLaVATrainer(Trainer):
             )
         else:
             return super()._get_train_sampler()
+    
+    # _get_eval_sampler(self)
 
     def create_optimizer(self):
         """
