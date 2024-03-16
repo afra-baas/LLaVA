@@ -36,7 +36,7 @@ from llava.model import *
 from llava.mm_utils import tokenizer_image_token
 
 from PIL import Image
-
+import requests
 
 local_rank = None
 
@@ -74,6 +74,11 @@ class DataArguments:
     is_multimodal: bool = False
     image_folder: Optional[str] = field(default=None)
     image_aspect_ratio: str = 'square'
+    # added for validation after each epoch
+    validation_data_path: Optional[str] = field(
+            default=None,
+            metadata={"help": "Path to the validation data."}
+        )
 
 
 @dataclass
@@ -698,7 +703,17 @@ class LazySupervisedDataset(Dataset):
             image_file = self.list_data_dict[i]['image']
             image_folder = self.data_args.image_folder
             processor = self.data_args.image_processor
-            image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+            # image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+
+            url = os.path.join(image_folder, image_file)
+            if url.startswith("http") or url.startswith("https"):
+                response = requests.get(url, stream=True)
+                image = Image.open(response.raw)
+            else:
+                image = Image.open(url)
+
+
+
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
                     width, height = pil_img.size
@@ -779,9 +794,14 @@ def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
     train_dataset = LazySupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
                                 data_args=data_args)
+    
+    eval_dataset = LazySupervisedDataset(tokenizer=tokenizer,
+                            data_path=data_args.validation_data_path,
+                            data_args=data_args)  
+    
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
-                eval_dataset=None,
+                eval_dataset=eval_dataset,
                 data_collator=data_collator)
 
 

@@ -2,19 +2,18 @@
 # llava/train/train_mem.py \
 
 # WANDB_MODE=offline
-train_file="VSR_train_TF.json"
-val_file="VSR_val_TF.json"
-epochs=3
-CKPT="VSR_TF_epoch3-depth-llava-v1.5-7b"
+train_file="VSR_train_TF_copy.json"
+val_file="VSR_val_TF_copy.json"
+epochs=1
+CKPT="VSR_TF_epoch3-depth-llava-v1.5-7b_testing"
 
-
-deepspeed /project/forked_repos/LLaVA/llava/train/train_custom.py \
+deepspeed /project/msc-thesis-project/forked_repos/LLaVA/llava/train/train_custom.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path liuhaotian/llava-v1.5-7b \
     --version v1 \
-    --data_path /project/forked_repos/LLaVA/playground/data/eval/custom2/${train_file} \
-    --validation_data_path /project/forked_repos/LLaVA/playground/data/eval/custom2/${val_file} \
+    --data_path /project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/${train_file} \
+    --validation_data_path /project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/${val_file} \
     --image_folder ''\
     --vision_tower openai/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \

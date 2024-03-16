@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from llava.model import *
+
 from llava.train.llama_flash_attn_monkey_patch import replace_llama_attn_with_flash_attn
 
 if __name__=="__main__":
@@ -18,9 +20,6 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
 
     def __init__(self, config):
         super(DepthLlavaLlamaForCausalLM, self).__init__(config)
-        self.conv1x1 = nn.Conv2d(4, 3, kernel_size=1).half()
-        self.conv1x1 = self.conv1x1.to(self.device)
-        self.conv_weights_path = 'conv1x1_weights.pth'
 
     def forward(
         self,
@@ -39,10 +38,12 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     ):
 
         if inputs_embeds is None:
-            # if images is not None and depth_images is not None:
+            if images is not None and depth_images is not None:
                 # first convert depth to grayscale
-                # depth_images = depth_images.mean(dim=1, keepdim=True)
-                # images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336]) -> torch.Size([16, 3, 336, 336])
+                depth_images = depth_images.mean(dim=1, keepdim=True)
+                print("images.shape", images.shape)
+                print("depth images.shape", depth_images.shape)
+                images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336]) -> torch.Size([16, 3, 336, 336])
 
             (input_ids,
                 position_ids,

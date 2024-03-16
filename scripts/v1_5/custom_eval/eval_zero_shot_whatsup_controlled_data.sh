@@ -16,15 +16,15 @@ CKPT="llava-v1.5-13b"
 test_file="whatsup_test_classification_controlled_images.json"
 
 # Create directory if it doesn't exist
-mkdir -p "$(dirname "/project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/$CKPT/")"
+mkdir -p "$(dirname "/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/$CKPT/")"
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
     echo "Processing IDX: $IDX"
     CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_science \
         --model-path liuhaotian/llava-v1.5-13b \
-        --question-file /project/forked_repos/LLaVA/playground/data/eval/custom2/${test_file} \
+        --question-file /project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/${test_file} \
         --image-folder '' \
-        --answers-file /project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/$CKPT/${CHUNKS}_${IDX}_zeroshot.jsonl \
+        --answers-file /project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/$CKPT/${CHUNKS}_${IDX}_zeroshot.jsonl \
         --num-chunks $CHUNKS \
         --chunk-idx $IDX \
         --temperature 0 \
@@ -33,7 +33,7 @@ done
 
 wait
 
-output_file=/project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/$CKPT/merge_zeroshot.jsonl
+output_file=/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/$CKPT/merge_zeroshot.jsonl
 
 # Create directory if it doesn't exist
 mkdir -p "$(dirname "$output_file")"
@@ -44,14 +44,14 @@ mkdir -p "$(dirname "$output_file")"
 
 # Loop through the indices and concatenate each file.
 for IDX in $(seq 0 $((CHUNKS-1))); do
-    cat /project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/$CKPT/${CHUNKS}_${IDX}_zeroshot.jsonl >> "$output_file"
+    cat /project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/$CKPT/${CHUNKS}_${IDX}_zeroshot.jsonl >> "$output_file"
 done
 
 
 # Evaluate
 python scripts/convert_custom_for_submission.py \
-    --annotation-file /project/forked_repos/LLaVA/playground/data/eval/custom2/${test_file} \
+    --annotation-file /project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/${test_file} \
     --result-file $output_file \
-    --result-upload-file /project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/${CKPT}/zeroshot_predictions.jsonl
+    --result-upload-file /project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup/${CKPT}/zeroshot_predictions.jsonl
 
     

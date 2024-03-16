@@ -291,6 +291,25 @@ def extract_relation2(true_captions):
         print('------------',len(relation_not_found))
     return relations  
 
+def get_clevr(split):
+    dataset = load_dataset("erkam/clevr-with-depth")
+    dataset_dict = dataset[split]#[:]
+    print(dataset_dict.keys())
+
+    # output_file = f"clevr_whole_dataset_{split}.json"
+    # with open(output_file, 'w') as json_file:
+    #     json.dump(dataset, json_file, indent=2)
+
+    # with open(f"clevr_whole_dataset_{split}.json", 'r') as json_file:
+    #       dataset= json.load(json_file)
+
+    images=dataset_dict["image"]
+    depth_maps=dataset_dict["depth"]
+    prompts=dataset_dict["prompt"]
+
+    return images,depth_maps, prompts
+
+
 
 def get_whatsup_dataloader(split, dataset_type= "controlled_images"):
 
