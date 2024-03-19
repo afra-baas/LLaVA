@@ -727,6 +727,15 @@ class LazySupervisedDataset(Dataset):
                         result = Image.new(pil_img.mode, (height, height), background_color)
                         result.paste(pil_img, ((height - width) // 2, 0))
                         return result
+                # print('-------image_mean -------')
+                # print(processor.imagetmux _mean)
+                # print(tuple(int(x*255) for x in processor.image_mean))    
+                if tuple(int(x*255) for x in processor.image_mean) != (122, 116, 104):
+                    print(tuple(int(x*255) for x in processor.image_mean))
+                    print(type(image))
+                    image.show()
+
+                
                 image = expand2square(image, tuple(int(x*255) for x in processor.image_mean))
                 image = processor.preprocess(image, return_tensors='pt')['pixel_values'][0]
             else:

@@ -2,10 +2,10 @@
 # llava/train/train_mem.py \
 
 # WANDB_MODE=offline
-train_file="VSR_train_TF_copy.json"
-val_file="VSR_val_TF_copy.json"
+train_file="VSR_train_TF.json"
+val_file="VSR_val_TF.json"
 epochs=1
-CKPT="VSR_TF_epoch3-depth_method2-llava-v1.5-7b_testing"
+CKPT="VSR_TF_epoch3-depth_method2-llava-v1.5-7b"
 
 deepspeed /project/msc-thesis-project/forked_repos/LLaVA/llava/train/train_custom_method2.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \

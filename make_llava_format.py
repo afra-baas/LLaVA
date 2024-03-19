@@ -266,6 +266,7 @@ def extract_relation(true_captions):
         for relation in check_relations:
             if relation in true_caption:
                 relations.append(relation)
+                break
     if len(relations)!=len(true_captions):
         print('--- Not all relations of captions found')
         print(true_captions)
@@ -283,7 +284,7 @@ def extract_relation2(true_captions):
                 relations.append(relation)
                 break
         if rel_found==False:
-            relation_not_found.append(true_captions)
+            relation_not_found.append(true_caption)
 
     if len(relations)!=len(true_captions):
         print('--- Not all relations of captions found')

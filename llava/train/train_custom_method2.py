@@ -9,10 +9,11 @@ if __name__=="__main__":
     print('using monkey patch')
     replace_llama_attn_with_flash_attn()  # Need to call this before importing transformers.
 
-from llava.model.language_model.llava_llama import LlavaLlamaForCausalLM, AutoModelForCausalLM, LlavaConfig
+from llava.model.language_model.llava_llama_method2 import LlavaLlamaForCausalLM, AutoModelForCausalLM, LlavaConfig
 from llava.train.train import *
 import torch.nn as nn
 import torch.nn.init as init
+from io import BytesIO
 
 class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     config_class = LlavaConfig
@@ -38,12 +39,12 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     ):
 
         if inputs_embeds is None:
-            if images is not None and depth_images is not None:
+            # if images is not None and depth_images is not None:
                 # first convert depth to grayscale
-                depth_images = depth_images.mean(dim=1, keepdim=True)
-                print("images.shape", images.shape)
-                print("depth images.shape", depth_images.shape)
-                images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336]) -> torch.Size([16, 3, 336, 336])
+                # depth_images = depth_images.mean(dim=1, keepdim=True)
+                # print("images.shape", images.shape) # torch.Size([32, 3, 336, 336])
+                # print("depth images.shape", depth_images.shape) #torch.Size([32, 1, 336, 336])
+                # images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336])  ##-> torch.Size([16, 3, 336, 336])
 
             (input_ids,
                 position_ids,
@@ -57,7 +58,8 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
                 attention_mask,
                 past_key_values,
                 labels,
-                images
+                images,
+                depth_images
             )
         
 
@@ -155,10 +157,16 @@ def custom_make_supervised_data_module(tokenizer, data_args):
     train_dataset = DepthSupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
                                 data_args=data_args,
-                                depth_path='/project/vsr_depth/train/')
+                                depth_path='/project/msc-thesis-project/vsr_depth/train/')
+    
+    eval_dataset = DepthSupervisedDataset(tokenizer=tokenizer,
+                            data_path=data_args.validation_data_path,
+                            data_args=data_args,
+                            depth_path='/project/msc-thesis-project/vsr_depth/val/')  
+    
     data_collator = DataCollatorForDepthSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
-                eval_dataset=None,
+                eval_dataset=eval_dataset,
                 data_collator=data_collator)
 
 
@@ -354,9 +362,9 @@ def train():
 
     torch.cuda.empty_cache()
     model.config.use_cache = True
-    weight_path = os.path.join(training_args.output_dir, model.conv_weights_path)
-    print('weight path', weight_path)
-    torch.save(model.conv1x1.state_dict(), weight_path)
+    # weight_path = os.path.join(training_args.output_dir, model.conv_weights_path)
+    # print('weight path', weight_path)
+    # torch.save(model.conv1x1.state_dict(), weight_path)
 
     if training_args.lora_enable:
         state_dict = get_peft_state_maybe_zero_3(
