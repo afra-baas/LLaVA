@@ -1,0 +1,77 @@
+[
+  {
+    "id": "000000450518.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000450518.jpg",
+    "depth": "../vsr_depth/val/000000450518.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe skateboard is in front of the dog."
+      },
+      {
+        "from": "gpt",
+        "value": "True"
+      }
+    ]
+  },
+  {
+    "id": "000000129072.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000129072.jpg",
+    "depth": "../vsr_depth/val/000000129072.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe chair is under the horse."
+      },
+      {
+        "from": "gpt",
+        "value": "False"
+      }
+    ]
+  },
+  {
+    "id": "000000280858.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000280858.jpg",
+    "depth": "../vsr_depth/val/000000280858.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe dog is below the bench."
+      },
+      {
+        "from": "gpt",
+        "value": "False"
+      }
+    ]
+  },
+  {
+    "id": "000000499225.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000499225.jpg",
+    "depth": "../vsr_depth/val/000000499225.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe dog is on the chair."
+      },
+      {
+        "from": "gpt",
+        "value": "True"
+      }
+    ]
+  },
+  {
+    "id": "000000300322.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000300322.jpg",
+    "depth": "../vsr_depth/val/000000300322.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe dog is far away from the horse."
+      },
+      {
+        "from": "gpt",
+        "value": "True"
+      }
+    ]
+  }
+]

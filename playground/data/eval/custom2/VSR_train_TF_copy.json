@@ -1,0 +1,152 @@
+[
+  {
+    "id": "000000035547.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000035547.jpg",
+    "depth": "../../vsr_depth/train/000000035547.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe cow is at the left side of the person."
+      },
+      {
+        "from": "gpt",
+        "value": "True"
+      }
+    ]
+  },
+  {
+    "id": "000000494297.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000494297.jpg",
+    "depth": "../../vsr_depth/train/000000494297.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe person is touching the donut."
+      },
+      {
+        "from": "gpt",
+        "value": "False"
+      }
+    ]
+  },
+  {
+    "id": "000000547341.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000547341.jpg",
+    "depth": "../../vsr_depth/train/000000547341.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe sandwich is in front of the person."
+      },
+      {
+        "from": "gpt",
+        "value": "True"
+      }
+    ]
+  },
+  {
+    "id": "000000415755.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000415755.jpg",
+    "depth": "../../vsr_depth/train/000000415755.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe dining table is in front of the person."
+      },
+      {
+        "from": "gpt",
+        "value": "True"
+      }
+    ]
+  },
+  {
+    "id": "000000136701.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000136701.jpg",
+    "depth": "../../vsr_depth/train/000000136701.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe person is touching the teddy bear."
+      },
+      {
+        "from": "gpt",
+        "value": "False"
+      }
+    ]
+  },
+  {
+    "id": "000000554735.jpg",
+    "image": "http://images.cocodataset.org/val2017/000000554735.jpg",
+    "depth": "../../vsr_depth/train/000000554735.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe person is at the right side of the pizza."
+      },
+      {
+        "from": "gpt",
+        "value": "False"
+      }
+    ]
+  },
+  {
+    "id": "000000534070.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000534070.jpg",
+    "depth": "../../vsr_depth/train/000000534070.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe bird is behind the elephant."
+      },
+      {
+        "from": "gpt",
+        "value": "False"
+      }
+    ]
+  },
+  {
+    "id": "000000058008.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000058008.jpg",
+    "depth": "../../vsr_depth/train/000000058008.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe banana is over the apple."
+      },
+      {
+        "from": "gpt",
+        "value": "False"
+      }
+    ]
+  },
+  {
+    "id": "000000218687.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000218687.jpg",
+    "depth": "../../vsr_depth/train/000000218687.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe teddy bear is on top of the cake."
+      },
+      {
+        "from": "gpt",
+        "value": "True"
+      }
+    ]
+  },
+  {
+    "id": "000000449279.jpg",
+    "image": "http://images.cocodataset.org/train2017/000000449279.jpg",
+    "depth": "../../vsr_depth/train/000000449279.jpg",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "Given the image is the following statement True or False?\nThe cake has as a part the person."
+      },
+      {
+        "from": "gpt",
+        "value": "False"
+      }
+    ]
+  }
+]
