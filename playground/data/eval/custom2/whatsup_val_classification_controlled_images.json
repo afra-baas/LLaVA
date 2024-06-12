@@ -1,8 +1,8 @@
 [
   {
     "id": "sunglasses_left_of_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/sunglasses_left_of_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/sunglasses_left_of_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/sunglasses_left_of_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/sunglasses_left_of_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -16,8 +16,8 @@
   },
   {
     "id": "lamp_right_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/lamp_right_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/lamp_right_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/lamp_right_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/lamp_right_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -31,8 +31,8 @@
   },
   {
     "id": "bowl_in-front_of_knife.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/bowl_in-front_of_knife.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_in-front_of_knife.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/bowl_in-front_of_knife.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_in-front_of_knife.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -46,8 +46,8 @@
   },
   {
     "id": "bowl_behind_spoon.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/bowl_behind_spoon.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_behind_spoon.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/bowl_behind_spoon.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_behind_spoon.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -61,8 +61,8 @@
   },
   {
     "id": "glasses_right_of_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/glasses_right_of_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/glasses_right_of_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/glasses_right_of_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/glasses_right_of_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -76,8 +76,8 @@
   },
   {
     "id": "can_right_of_headphones.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/can_right_of_headphones.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/can_right_of_headphones.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/can_right_of_headphones.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/can_right_of_headphones.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -91,8 +91,8 @@
   },
   {
     "id": "glove_left_of_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/glove_left_of_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/glove_left_of_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/glove_left_of_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/glove_left_of_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -106,8 +106,8 @@
   },
   {
     "id": "remote_right_of_candle.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/remote_right_of_candle.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/remote_right_of_candle.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/remote_right_of_candle.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/remote_right_of_candle.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -121,8 +121,8 @@
   },
   {
     "id": "wineglass_right_of_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/wineglass_right_of_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/wineglass_right_of_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/wineglass_right_of_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/wineglass_right_of_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -136,8 +136,8 @@
   },
   {
     "id": "book_in-front_of_flower.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/book_in-front_of_flower.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/book_in-front_of_flower.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/book_in-front_of_flower.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/book_in-front_of_flower.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -151,8 +151,8 @@
   },
   {
     "id": "pillow_right_of_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/pillow_right_of_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/pillow_right_of_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/pillow_right_of_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/pillow_right_of_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -166,8 +166,8 @@
   },
   {
     "id": "cup_behind_fork.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/cup_behind_fork.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cup_behind_fork.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/cup_behind_fork.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cup_behind_fork.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -181,8 +181,8 @@
   },
   {
     "id": "plate_in-front_of_book.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/plate_in-front_of_book.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_in-front_of_book.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/plate_in-front_of_book.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_in-front_of_book.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -196,8 +196,8 @@
   },
   {
     "id": "mug_in-front_of_fork.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/mug_in-front_of_fork.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/mug_in-front_of_fork.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/mug_in-front_of_fork.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/mug_in-front_of_fork.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -211,8 +211,8 @@
   },
   {
     "id": "bowl_left_of_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/bowl_left_of_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_left_of_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/bowl_left_of_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_left_of_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -226,8 +226,8 @@
   },
   {
     "id": "wineglass_on_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/wineglass_on_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/wineglass_on_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/wineglass_on_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/wineglass_on_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -241,8 +241,8 @@
   },
   {
     "id": "plate_right_of_candle.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/plate_right_of_candle.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_right_of_candle.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/plate_right_of_candle.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_right_of_candle.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -256,8 +256,8 @@
   },
   {
     "id": "cap_on_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/cap_on_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cap_on_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/cap_on_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cap_on_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -271,8 +271,8 @@
   },
   {
     "id": "can_behind_flower.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/can_behind_flower.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/can_behind_flower.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/can_behind_flower.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/can_behind_flower.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -286,8 +286,8 @@
   },
   {
     "id": "glass_under_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/glass_under_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/glass_under_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/glass_under_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/glass_under_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -301,8 +301,8 @@
   },
   {
     "id": "bottle-of-mustard_left_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/bottle-of-mustard_left_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bottle-of-mustard_left_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/bottle-of-mustard_left_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bottle-of-mustard_left_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -316,8 +316,8 @@
   },
   {
     "id": "kettle_on_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/kettle_on_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/kettle_on_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/kettle_on_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/kettle_on_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -331,8 +331,8 @@
   },
   {
     "id": "cup_right_of_can.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/cup_right_of_can.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cup_right_of_can.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/cup_right_of_can.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cup_right_of_can.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -346,8 +346,8 @@
   },
   {
     "id": "cup_under_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/cup_under_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cup_under_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/cup_under_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cup_under_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -361,8 +361,8 @@
   },
   {
     "id": "dog_left_of_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/dog_left_of_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/dog_left_of_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/dog_left_of_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/dog_left_of_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -376,8 +376,8 @@
   },
   {
     "id": "box_on_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/box_on_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/box_on_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/box_on_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/box_on_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -391,8 +391,8 @@
   },
   {
     "id": "plate_behind_can.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/plate_behind_can.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_behind_can.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/plate_behind_can.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_behind_can.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -406,8 +406,8 @@
   },
   {
     "id": "bowl_in-front_of_headphones.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/bowl_in-front_of_headphones.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_in-front_of_headphones.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/bowl_in-front_of_headphones.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_in-front_of_headphones.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -421,8 +421,8 @@
   },
   {
     "id": "cup_right_of_knife.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/cup_right_of_knife.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cup_right_of_knife.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/cup_right_of_knife.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cup_right_of_knife.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -436,8 +436,8 @@
   },
   {
     "id": "can_in-front_of_remote.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/can_in-front_of_remote.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/can_in-front_of_remote.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/can_in-front_of_remote.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/can_in-front_of_remote.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -451,8 +451,8 @@
   },
   {
     "id": "sunglasses_in-front_of_tape.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/sunglasses_in-front_of_tape.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/sunglasses_in-front_of_tape.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/sunglasses_in-front_of_tape.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/sunglasses_in-front_of_tape.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -466,8 +466,8 @@
   },
   {
     "id": "cap_behind_remote.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/cap_behind_remote.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cap_behind_remote.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/cap_behind_remote.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cap_behind_remote.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -481,8 +481,8 @@
   },
   {
     "id": "plant_on_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/plant_on_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plant_on_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/plant_on_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plant_on_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -496,8 +496,8 @@
   },
   {
     "id": "scissors_right_of_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/scissors_right_of_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/scissors_right_of_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/scissors_right_of_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/scissors_right_of_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -511,8 +511,8 @@
   },
   {
     "id": "plate_left_of_headphones.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/plate_left_of_headphones.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_left_of_headphones.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/plate_left_of_headphones.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_left_of_headphones.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -526,8 +526,8 @@
   },
   {
     "id": "book_in-front_of_fork.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/book_in-front_of_fork.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/book_in-front_of_fork.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/book_in-front_of_fork.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/book_in-front_of_fork.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -541,8 +541,8 @@
   },
   {
     "id": "pan_under_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/pan_under_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/pan_under_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/pan_under_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/pan_under_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -556,8 +556,8 @@
   },
   {
     "id": "cap_under_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/cap_under_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cap_under_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/cap_under_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cap_under_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -571,8 +571,8 @@
   },
   {
     "id": "photograph_on_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/photograph_on_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/photograph_on_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/photograph_on_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/photograph_on_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -586,8 +586,8 @@
   },
   {
     "id": "microphone_right_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/microphone_right_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/microphone_right_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/microphone_right_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/microphone_right_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -601,8 +601,8 @@
   },
   {
     "id": "yarn_right_of_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/yarn_right_of_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/yarn_right_of_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/yarn_right_of_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/yarn_right_of_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -616,8 +616,8 @@
   },
   {
     "id": "can_behind_spoon.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/can_behind_spoon.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/can_behind_spoon.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/can_behind_spoon.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/can_behind_spoon.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -631,8 +631,8 @@
   },
   {
     "id": "mug_left_of_scissors.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/mug_left_of_scissors.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/mug_left_of_scissors.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/mug_left_of_scissors.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/mug_left_of_scissors.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -646,8 +646,8 @@
   },
   {
     "id": "plate_behind_scissors.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/plate_behind_scissors.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_behind_scissors.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/plate_behind_scissors.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_behind_scissors.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -661,8 +661,8 @@
   },
   {
     "id": "book_right_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/book_right_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/book_right_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/book_right_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/book_right_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -676,8 +676,8 @@
   },
   {
     "id": "plate_behind_tape.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/plate_behind_tape.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_behind_tape.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/plate_behind_tape.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_behind_tape.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -691,8 +691,8 @@
   },
   {
     "id": "hat_on_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/hat_on_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/hat_on_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/hat_on_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/hat_on_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -706,8 +706,8 @@
   },
   {
     "id": "book_right_of_cup.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/book_right_of_cup.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/book_right_of_cup.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/book_right_of_cup.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/book_right_of_cup.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -721,8 +721,8 @@
   },
   {
     "id": "ball-of-yarn_left_of_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/ball-of-yarn_left_of_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/ball-of-yarn_left_of_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/ball-of-yarn_left_of_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/ball-of-yarn_left_of_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -736,8 +736,8 @@
   },
   {
     "id": "remote_in-front_of_sunglasses.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/remote_in-front_of_sunglasses.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/remote_in-front_of_sunglasses.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/remote_in-front_of_sunglasses.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/remote_in-front_of_sunglasses.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -751,8 +751,8 @@
   },
   {
     "id": "remote_on_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/remote_on_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/remote_on_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/remote_on_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/remote_on_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -766,8 +766,8 @@
   },
   {
     "id": "headphones_on_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/headphones_on_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/headphones_on_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/headphones_on_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/headphones_on_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -781,8 +781,8 @@
   },
   {
     "id": "book_behind_candle.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/book_behind_candle.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/book_behind_candle.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/book_behind_candle.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/book_behind_candle.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -796,8 +796,8 @@
   },
   {
     "id": "remote_right_of_spoon.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/remote_right_of_spoon.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/remote_right_of_spoon.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/remote_right_of_spoon.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/remote_right_of_spoon.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -811,8 +811,8 @@
   },
   {
     "id": "pillow_right_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/pillow_right_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/pillow_right_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/pillow_right_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/pillow_right_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -826,8 +826,8 @@
   },
   {
     "id": "bottle-of-orange-juice_under_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/bottle-of-orange-juice_under_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bottle-of-orange-juice_under_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/bottle-of-orange-juice_under_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bottle-of-orange-juice_under_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -841,8 +841,8 @@
   },
   {
     "id": "plate_in-front_of_sunglasses.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/plate_in-front_of_sunglasses.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_in-front_of_sunglasses.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/plate_in-front_of_sunglasses.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_in-front_of_sunglasses.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -856,8 +856,8 @@
   },
   {
     "id": "remote_behind_candle.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/remote_behind_candle.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/remote_behind_candle.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/remote_behind_candle.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/remote_behind_candle.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -871,8 +871,8 @@
   },
   {
     "id": "plate_left_of_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/plate_left_of_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_left_of_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/plate_left_of_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_left_of_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -886,8 +886,8 @@
   },
   {
     "id": "bowl_behind_can.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/bowl_behind_can.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_behind_can.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/bowl_behind_can.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_behind_can.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -901,8 +901,8 @@
   },
   {
     "id": "cup_left_of_flower.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/cup_left_of_flower.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cup_left_of_flower.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/cup_left_of_flower.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cup_left_of_flower.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -916,8 +916,8 @@
   },
   {
     "id": "bowl_left_of_candle.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/bowl_left_of_candle.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_left_of_candle.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/bowl_left_of_candle.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_left_of_candle.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -931,8 +931,8 @@
   },
   {
     "id": "bowl_right_of_can.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/bowl_right_of_can.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_right_of_can.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/bowl_right_of_can.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_right_of_can.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -946,8 +946,8 @@
   },
   {
     "id": "mug_right_of_flower.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/mug_right_of_flower.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/mug_right_of_flower.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/mug_right_of_flower.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/mug_right_of_flower.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -961,8 +961,8 @@
   },
   {
     "id": "plate_under_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/plate_under_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_under_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/plate_under_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_under_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -976,8 +976,8 @@
   },
   {
     "id": "mug_left_of_fork.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/mug_left_of_fork.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/mug_left_of_fork.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/mug_left_of_fork.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/mug_left_of_fork.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -991,8 +991,8 @@
   },
   {
     "id": "plate_right_of_sunglasses.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/plate_right_of_sunglasses.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_right_of_sunglasses.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/plate_right_of_sunglasses.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_right_of_sunglasses.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1006,8 +1006,8 @@
   },
   {
     "id": "oven-mitt_left_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/oven-mitt_left_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/oven-mitt_left_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/oven-mitt_left_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/oven-mitt_left_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1021,8 +1021,8 @@
   },
   {
     "id": "toilet-roll_on_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/toilet-roll_on_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/toilet-roll_on_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/toilet-roll_on_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/toilet-roll_on_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1036,8 +1036,8 @@
   },
   {
     "id": "bowl_right_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/bowl_right_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_right_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/bowl_right_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_right_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1051,8 +1051,8 @@
   },
   {
     "id": "cup_right_of_fork.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/cup_right_of_fork.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cup_right_of_fork.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/cup_right_of_fork.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cup_right_of_fork.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1066,8 +1066,8 @@
   },
   {
     "id": "toy-cactus_right_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/toy-cactus_right_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/toy-cactus_right_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/toy-cactus_right_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/toy-cactus_right_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1081,8 +1081,8 @@
   },
   {
     "id": "plate_under_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/plate_under_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/plate_under_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/plate_under_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/plate_under_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1096,8 +1096,8 @@
   },
   {
     "id": "cup_left_of_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/cup_left_of_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cup_left_of_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/cup_left_of_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cup_left_of_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1111,8 +1111,8 @@
   },
   {
     "id": "beer-bottle_under_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/beer-bottle_under_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/beer-bottle_under_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/beer-bottle_under_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/beer-bottle_under_armchair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1126,8 +1126,8 @@
   },
   {
     "id": "bowl_in-front_of_spoon.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/bowl_in-front_of_spoon.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/bowl_in-front_of_spoon.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/bowl_in-front_of_spoon.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/bowl_in-front_of_spoon.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1141,8 +1141,8 @@
   },
   {
     "id": "mug_in-front_of_plate.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/mug_in-front_of_plate.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/mug_in-front_of_plate.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/mug_in-front_of_plate.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/mug_in-front_of_plate.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1156,8 +1156,8 @@
   },
   {
     "id": "knife_on_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/knife_on_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/knife_on_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/knife_on_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/knife_on_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1171,8 +1171,8 @@
   },
   {
     "id": "cup_right_of_tape.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_clevr/cup_right_of_tape.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/cup_right_of_tape.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_clevr/cup_right_of_tape.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/cup_right_of_tape.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1186,8 +1186,8 @@
   },
   {
     "id": "knife_under_table.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/knife_under_table.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/knife_under_table.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/knife_under_table.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/knife_under_table.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1201,8 +1201,8 @@
   },
   {
     "id": "scarf_left_of_chair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/scarf_left_of_chair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/scarf_left_of_chair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/scarf_left_of_chair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/scarf_left_of_chair.jpeg",
     "conversations": [
       {
         "from": "human",
@@ -1216,8 +1216,8 @@
   },
   {
     "id": "pillow_on_armchair.jpeg",
-    "image": "/project/whatsup_vlms/data/controlled_images/pillow_on_armchair.jpeg",
-    "depth": "../whatsup_controlled_dataset_depth/pillow_on_armchair.jpeg",
+    "image": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_images/pillow_on_armchair.jpeg",
+    "depth": "/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/pillow_on_armchair.jpeg",
     "conversations": [
       {
         "from": "human",

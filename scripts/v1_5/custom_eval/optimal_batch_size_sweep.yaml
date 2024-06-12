@@ -1,0 +1,42 @@
+# optimal_batch_size_sweep.yaml
+program: train.py
+method: bayes
+metric:
+  name: validation_loss
+  goal: minimize
+  project: "huggingface"
+parameters:
+    learning_rate:
+    distribution: log_uniform
+    min: 1e-6
+    max: 2e-6 
+  weight_decay:
+    distribution: log_uniform
+    min: 1e-2
+    max: 1e-6
+  warmup_ratio:
+    distribution: uniform
+    min: 0.01
+    max: 0.1
+  lr_scheduler_type:
+    values: ["linear", "cosine", "polynomial", "constant"] #, "cosine_with_restarts", "constant_with_warmup"]
+  mm_vision_select_layer:
+    values: [-2, -1]
+  mm_projector_lr:
+    distribution: log_uniform
+    min: 2e-8
+    max: 1e-2
+  dataset:
+    values: ["VSR"] #, "VSR_BCE", "Whatsup", "VSR_class", "VSR_combi", "VSR_random", "VSR_random_class"]
+  method:
+    values: ["no_depth"] #, "conv", "late", "dino"]
+  train_batchsize:
+    values: [8, 16, 32]
+  eval_batchsize:
+    values: [8, 16, 32]
+run:
+  count: 100
+command:
+  - llava
+  - bash
+  - ${program}

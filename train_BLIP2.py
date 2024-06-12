@@ -159,7 +159,7 @@ def train():
 
     optimizer = torch.optim.Adam(model.parameters(), lr=5e-4)
     model.train()
-    for epoch in range(1):
+    for epoch in range(3):
         print("Epoch:", epoch)
         pbar = tqdm(enumerate(data_loader), total=len(data_loader))
         for idx, batch in pbar: 
@@ -199,7 +199,7 @@ def train():
 if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
     conv_mode= "vicuna_v1"
-    CKPT= "VSR_TF_epoch3-nodepth-blip2_second_try"
+    CKPT= "VSR_TF_epoch3-nodepth-blip2_2"
     save_interval = 100
     train()
 

@@ -1,13 +1,13 @@
 #!/bin/bash
+# --data_path ./playground/data/llava_v1_5_mix665k.json \
+# --image_folder ./playground/data \
 
 deepspeed llava/train/train_mem.py \
     --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr 2e-5 \
     --deepspeed ./scripts/zero3.json \
     --model_name_or_path liuhaotian/llava-v1.5-13b \
     --version v1 \
-    # --data_path ./playground/data/llava_v1_5_mix665k.json \
     --data_path ./playground/data/eval/custom/VSR_train_classification.jsonl \
-    # --image_folder ./playground/data \
     --image_folder ./playground/data/VSR_train_images \
     --vision_tower openai/clip-vit-large-patch14-336 \
     --mm_projector_type mlp2x_gelu \

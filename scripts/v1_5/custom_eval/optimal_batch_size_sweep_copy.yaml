@@ -1,0 +1,51 @@
+# optimal_batch_size_sweep.yaml
+sweep:
+  name: "optimal-batch-size-sweep"
+  method: bayes
+  metric:
+    name: validation_accuracy
+    goal: maximize
+  project: "hyperparam_search_LLaVAs"
+parameters:
+    learning_rate:
+    distribution: log_uniform
+    min: 2e-6
+    max: 1e-6 
+  weight_decay:
+    distribution: log_uniform
+    min: 1e-6
+    max: 1e-2
+  warmup_ratio:
+    distribution: uniform
+    min: 0.01
+    max: 0.1
+  momentum:
+    distribution: uniform
+    min: 0.5
+    max: 0.99
+  dropout_rate:
+    distribution: uniform
+    min: 0.0
+    max: 0.5
+  lr_scheduler_type:
+    values: ["linear", "cosine", "polynomial", "constant"] #, "cosine_with_restarts", "constant_with_warmup"]
+  mm_vision_select_layer:
+    values: [-2, -1]
+  mm_projector_lr:
+    distribution: log_uniform
+    min: 2e-8
+    max: 1e-2
+  dataset:
+    values: ["VSR"] #, "VSR_BCE", "Whatsup", "VSR_class", "VSR_combi", "VSR_random", "VSR_random_class"]
+  method:
+    values: ["no_depth"] #, "conv", "late", "dino"]
+  train_batchsize:
+    values: [8, 16, 32]
+  eval_batchsize:
+    values: [8, 16, 32]
+run:
+  count: 200
+command:
+  - ${env}
+  - bash
+  - your_finetuning_script.sh

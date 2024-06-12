@@ -1,0 +1,61 @@
+method: bayes
+metric:
+  goal: minimize
+  name: eval/loss
+parameters:
+  early_stopping:
+    distribution: categorical
+    values:
+      - "true"
+      - "false"
+  learning_rate:
+    distribution: uniform
+    max: 2e-06
+    min: 1e-06
+  load_best_model_at_end:
+    distribution: categorical
+    values:
+      - "true"
+  logging_dir:
+    distribution: categorical
+    values:
+      - ./checkpoints/checkpoint-VSR_TF_epoch3-depth-llava-v1.5-7b_testing-lora/runs/Mar26_16-38-03_7e0db1d14cbc
+  lr_scheduler_type:
+    distribution: categorical
+    values:
+      - linear
+      - cosine
+  mm_projector_lr:
+    distribution: uniform
+    max: 0.01
+    min: 2e-08
+  mm_vision_select_layer:
+    distribution: int_uniform
+    max: -1
+    min: -2
+  output_dir:
+    distribution: categorical
+    values:
+      - ./checkpoints/checkpoint-VSR_TF_epoch3-depth-llava-v1.5-7b_testing-lora
+  per_device_eval_batch_size:
+    distribution: int_uniform
+    max: 32
+    min: 8
+  per_device_train_batch_size:
+    distribution: int_uniform
+    max: 32
+    min: 8
+  run_name:
+    distribution: categorical
+    values:
+      - VSR_TF_epoch3-depth-llava-v1.5-7b_testing
+  unfreeze_mm_vision_tower:
+    distribution: categorical
+    values:
+      - "true"
+      - "false"
+  warmup_ratio:
+    distribution: uniform
+    max: 0.06
+    min: 0.015
+program: train.py

@@ -5,15 +5,27 @@ IFS=',' read -ra GPULIST <<< "$gpu_list"
 
 CHUNKS=${#GPULIST[@]}
 
-CKPT="llava-v1.5-13b"
+# CKPT="llava-v1.5-13b"
 SPLIT="llava_gqa_testdev_balanced"
 GQADIR="./playground/data/eval/gqa/data"
+# --model-path liuhaotian/$CKPT \
+
+base="llava-v1.5-7b"
+CKPT="VSR_TF_epoch3-no_depth-${base}"
+# CKPT="epoch3-no_depth-${base}"
+
+        # --model-base liuhaotian/$base \
+        # --model-path /project/msc-thesis-project/forked_repos/LLaVA/checkpoints/checkpoint-${CKPT}-lora \
+# CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_loader \
+
+device=1
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
-    CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m llava.eval.model_vqa_loader \
-        --model-path liuhaotian/llava-v1.5-13b \
+    CUDA_VISIBLE_DEVICES=$device python -m llava.eval.model_vqa_loader \
+        --model-base liuhaotian/$base \
+        --model-path /project/msc-thesis-project/forked_repos/LLaVA/checkpoints/checkpoint-${CKPT}-lora \
         --question-file ./playground/data/eval/gqa/$SPLIT.jsonl \
-        --image-folder ./playground/data/eval/gqa/data/images \
+        --image-folder ./playground/data/eval/gqa/images/images \
         --answers-file ./playground/data/eval/gqa/answers/$SPLIT/$CKPT/${CHUNKS}_${IDX}.jsonl \
         --num-chunks $CHUNKS \
         --chunk-idx $IDX \
@@ -35,5 +47,7 @@ done
 
 python scripts/convert_gqa_for_eval.py --src $output_file --dst $GQADIR/testdev_balanced_predictions.json
 
-cd $GQADIR
-python eval/eval.py --tier testdev_balanced
+cd $GQADIR 
+python eval.py --tier testdev_balanced 
+
+echo /playground/data/eval/gqa/answers/$SPLIT/$CKPT/merge.jsonl
