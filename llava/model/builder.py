@@ -19,7 +19,9 @@ import shutil
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig, BitsAndBytesConfig
 import torch
-from llava.model import *
+# from llava.model import *
+from llava.model.language_model.llava_llama import LlavaLlamaForCausalLM, LlavaConfig
+
 from llava.constants import DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 
 

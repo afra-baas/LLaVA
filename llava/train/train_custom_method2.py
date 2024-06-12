@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from llava.model import *
+# from llava.model import *
 
 from llava.train.llama_flash_attn_monkey_patch import replace_llama_attn_with_flash_attn
 
@@ -10,17 +10,76 @@ if __name__=="__main__":
     replace_llama_attn_with_flash_attn()  # Need to call this before importing transformers.
 
 from llava.model.language_model.llava_llama_method2 import LlavaLlamaForCausalLM, AutoModelForCausalLM, LlavaConfig
-from llava.train.train import *
+from llava.train.train_for_method2 import *
 import torch.nn as nn
 import torch.nn.init as init
 from io import BytesIO
+
+from transformers.generation.utils import GenerateOutput
+from typing import List, Optional, Tuple, Union
+
+
+class SinusoidalFunction(nn.Module):
+    def __init__(self, in_features, out_features):
+        super(SinusoidalFunction, self).__init__()
+        self.linear = nn.Linear(in_features, out_features)
+        self.sinusoidal = nn.Linear(in_features, out_features)
+
+    def forward(self, x):
+        return self.linear(x) + torch.sin(self.sinusoidal(x))
+
 
 class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     config_class = LlavaConfig
     torch.manual_seed(25)
 
-    def __init__(self, config):
+    def __init__(self, config): #, device=None -> error: TypeError: Object of type device is not JSON serializable  
         super(DepthLlavaLlamaForCausalLM, self).__init__(config)
+
+        # TODO: do not hardcode, fix this
+        # self.fusion_layer = nn.Linear(8192, 4096)#.to(torch.bfloat16) # (['weight', 'bias']) # after projection
+        # self.fusion_layer = nn.Linear(2048, 1024)#.to(torch.bfloat16) # (['weight', 'bias']) 
+
+        # self.fusion_layer = nn.Linear(10240, 5120)#.to(torch.bfloat16) # (['weight', 'bias']) 13b
+        # print('state_dict init', self.fusion_layer.state_dict())
+
+
+        # self.fusion_layer = nn.Linear(4096, 1)#.to(torch.bfloat16) # (['weight', 'bias']) 13b 
+        # print('state_dict init', self.fusion_layer.state_dict())
+
+
+        # self.fusion_layer_weights = torch.nn.Parameter(torch.randn(8192, 4096))
+        # self.fusion_layer_weights = torch.nn.Parameter(torch.randn(1152, 4096))
+        # print('state_dict init', self.fusion_layer_weights.data)
+
+        # stride = (1, 1)
+        # padding = (71, 155)
+        # self.downsampling_conv = nn.Conv2d(in_channels=3, out_channels=3, kernel_size=3, stride=stride, padding=padding).to(self.device)
+        # self.downsampling_conv.bias.data = self.downsampling_conv.bias.data.to(torch.float16)
+        # self.downsampling_conv.weight.data = self.downsampling_conv.weight.data.to(torch.float16)
+        # print('state_dict init', self.downsampling_conv.state_dict())
+
+        # self.sinusoidal_fn = SinusoidalFunction(1024, 1024)
+    
+       
+       
+        
+    # def _init_weights(self):
+    def initialize_weights(self):
+        print("CHECK: initialize_weights")
+        # print('state_dict', self.fusion_layer_weights.data)
+        # nn.init.xavier_uniform_(self.fusion_layer.weight, gain=nn.init.calculate_gain('relu'))
+        # nn.init.zeros_(self.fusion_layer.bias)
+
+        # nn.init.xavier_uniform_(self.downsampling_conv.weight, gain=nn.init.calculate_gain('relu'))
+        # nn.init.zeros_(self.downsampling_conv.bias)
+
+        # init.kaiming_normal_(self.sinusoidal_fn.linear.weight)
+        # init.kaiming_normal_(self.sinusoidal_fn.sinusoidal.weight)
+        # nn.init.zeros_(self.sinusoidal_fn.linear.bias)
+        # nn.init.zeros_(self.sinusoidal_fn.sinusoidal.bias)
+
+
 
     def forward(
         self,
@@ -39,13 +98,6 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     ):
 
         if inputs_embeds is None:
-            # if images is not None and depth_images is not None:
-                # first convert depth to grayscale
-                # depth_images = depth_images.mean(dim=1, keepdim=True)
-                # print("images.shape", images.shape) # torch.Size([32, 3, 336, 336])
-                # print("depth images.shape", depth_images.shape) #torch.Size([32, 1, 336, 336])
-                # images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336])  ##-> torch.Size([16, 3, 336, 336])
-
             (input_ids,
                 position_ids,
                 attention_mask,
@@ -76,10 +128,37 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
             return_dict=return_dict
         )
     
-    def encode_images(self, images):
-        return super().encode_images(images)
+    @torch.no_grad()
+    def generate(
+        self,
+        inputs: Optional[torch.Tensor] = None,
+        images: Optional[torch.Tensor] = None,
+        depth_images: Optional[torch.Tensor] = None,
+        image_sizes: Optional[torch.Tensor] = None,
+        **kwargs,
+    ) -> Union[GenerateOutput, torch.LongTensor]:
+        
+        # print("kwargs", kwargs)
+        if "inputs_embeds" in kwargs:
+            raise NotImplementedError("`inputs_embeds` is not supported")
+        
+        print("DepthLlavaLlamaForCausalLM generate method2 ")
+        # print("MRO:", [cls.__name__ for cls in DepthLlavaLlamaForCausalLM.mro()])
+        
+        return super().generate(
+            inputs,
+            images,
+            depth_images,
+            image_sizes=image_sizes,
+            **kwargs,
+        )
+
+    
+    def encode_images(self, images, depth_images=None):
+        return super().encode_images(images, depth_images=depth_images)
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):
+        print("prepare_inputs_for_generation")
         images = kwargs.pop("images", None)
         depth_images = kwargs.pop("depth_images", None)
         _inputs = super().prepare_inputs_for_generation(
@@ -111,9 +190,9 @@ class DepthSupervisedDataset(LazySupervisedDataset):
 
             if image_file.startswith("http") or image_file.startswith("https"):
                 response = requests.get(image_file)
-                depth_image = Image.open(BytesIO(response.content))
+                depth_image = Image.open(BytesIO(response.content)).convert('RGB')
             else:
-                depth_image = Image.open(os.path.join(image_folder, image_file))
+                depth_image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
 
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
@@ -157,12 +236,12 @@ def custom_make_supervised_data_module(tokenizer, data_args):
     train_dataset = DepthSupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
                                 data_args=data_args,
-                                depth_path='/project/msc-thesis-project/vsr_depth/train/')
+                                depth_path=data_args.depth_path_train)
     
     eval_dataset = DepthSupervisedDataset(tokenizer=tokenizer,
                             data_path=data_args.validation_data_path,
                             data_args=data_args,
-                            depth_path='/project/msc-thesis-project/vsr_depth/val/')  
+                            depth_path=data_args.depth_path_val)  
     
     data_collator = DataCollatorForDepthSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
@@ -205,7 +284,7 @@ def train():
         if 'mpt' in model_args.model_name_or_path:
             config = transformers.AutoConfig.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
             config.attn_config['attn_impl'] = training_args.mpt_attn_impl
-            model = LlavaMPTForCausalLM.from_pretrained(
+            model = LlavaMptForCausalLM.from_pretrained(
                 model_args.model_name_or_path,
                 config=config,
                 cache_dir=training_args.cache_dir,
@@ -214,9 +293,11 @@ def train():
         else:
             model = DepthLlavaLlamaForCausalLM.from_pretrained(
                 model_args.model_name_or_path,
+                # low_cpu_mem_usage=True, # ValueError: DeepSpeed Zero-3 is not compatible with `low_cpu_mem_usage=True` or with passing a `device_map`.
                 cache_dir=training_args.cache_dir,
                 **bnb_model_from_pretrained_args
             )
+            model.initialize_weights()
     else:
         model = transformers.LlamaForCausalLM.from_pretrained(
             model_args.model_name_or_path,
@@ -241,6 +322,8 @@ def train():
                 output.requires_grad_(True)
             model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
 
+    # print('state_dict.keys() before lora ', model.fusion_layer.state_dict().keys()) # (['weight', 'bias'])
+    # LORA adds adapters, used to adaptively adjust the learning rate of each weight in the layer based on its importance for the task at hand.
     if training_args.lora_enable:
         from peft import LoraConfig, get_peft_model
         lora_config = LoraConfig(
@@ -259,6 +342,8 @@ def train():
         rank0_print("Adding LoRA adapters...")
         model = get_peft_model(model, lora_config)
 
+    # print('state_dict.keys() after lora ', model.fusion_layer.state_dict().keys()) # (['base_layer.weight', 'base_layer.bias', 'lora_A.default.weight', 'lora_B.default.weight'])  
+    
     # Tokenizer init
     if 'mpt' in model_args.model_name_or_path:
         tokenizer = transformers.AutoTokenizer.from_pretrained(
@@ -345,15 +430,12 @@ def train():
     data_module = custom_make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
     
-    # rgb_data_module=make_supervised_data_module(tokenizer=tokenizer,
-    #                                           data_args=data_args)
-   
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,
                     args=training_args,
                     **data_module)
 
-    print('list checkpoint', list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")))
+    print('list checkpoint', list(pathlib.Path(training_args.output_dir).glob("checkpoint-*"))) #[]
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
         trainer.train(resume_from_checkpoint=True)
     else:
@@ -362,9 +444,46 @@ def train():
 
     torch.cuda.empty_cache()
     model.config.use_cache = True
-    # weight_path = os.path.join(training_args.output_dir, model.conv_weights_path)
-    # print('weight path', weight_path)
-    # torch.save(model.conv1x1.state_dict(), weight_path)
+
+    # fusion_state_dict = model.sinusoidal_fn.state_dict()
+    # Check for NaNs, -inf, and inf 
+    # weight_has_issue = torch.isnan(fusion_state_dict['base_layer.weight']).any() or torch.isinf(fusion_state_dict['base_layer.weight']).any()
+    # bias_has_issue = torch.isnan(fusion_state_dict['base_layer.bias']).any() or torch.isinf(fusion_state_dict['base_layer.bias']).any()
+    # print("Weight has NaN, -inf, or inf:", weight_has_issue)
+    # print("Bias has NaN, -inf, or inf:", bias_has_issue)
+
+    # print('state_dict before save ', fusion_state_dict) 
+    # torch.save(fusion_state_dict, os.path.join(training_args.output_dir, 'sinusoidal_fn.pth')) #(['base_layer.weight', 'base_layer.bias', 'lora_A.default.weight', 'lora_B.default.weight'])
+
+
+    # fusion_state_dict = model.downsampling_conv.state_dict()
+    # # Check for NaNs, -inf, and inf 
+    # # weight_has_issue = torch.isnan(fusion_state_dict['base_layer.weight']).any() or torch.isinf(fusion_state_dict['base_layer.weight']).any()
+    # # bias_has_issue = torch.isnan(fusion_state_dict['base_layer.bias']).any() or torch.isinf(fusion_state_dict['base_layer.bias']).any()
+    # # print("Weight has NaN, -inf, or inf:", weight_has_issue)
+    # # print("Bias has NaN, -inf, or inf:", bias_has_issue)
+
+    # print('state_dict before save ', fusion_state_dict) 
+    # torch.save(fusion_state_dict, os.path.join(training_args.output_dir, 'fusion_layer.pth')) #(['base_layer.weight', 'base_layer.bias', 'lora_A.default.weight', 'lora_B.default.weight'])
+
+
+
+    # fusion_state_dict = model.fusion_layer.state_dict()
+    # # Check for NaNs, -inf, and inf 
+    # weight_has_issue = torch.isnan(fusion_state_dict['base_layer.weight']).any() or torch.isinf(fusion_state_dict['base_layer.weight']).any()
+    # bias_has_issue = torch.isnan(fusion_state_dict['base_layer.bias']).any() or torch.isinf(fusion_state_dict['base_layer.bias']).any()
+    # print("Weight has NaN, -inf, or inf:", weight_has_issue)
+    # print("Bias has NaN, -inf, or inf:", bias_has_issue)
+
+    # print('state_dict before save ', fusion_state_dict) 
+    # torch.save(fusion_state_dict, os.path.join(training_args.output_dir, 'fusion_layer.pth')) #(['base_layer.weight', 'base_layer.bias', 'lora_A.default.weight', 'lora_B.default.weight'])
+
+
+
+    # fusion_state_dict = model.fusion_layer_weights.data
+    # print('state_dict before save ', fusion_state_dict) 
+    # torch.save(fusion_state_dict, os.path.join(training_args.output_dir, 'fusion_layer_weights.pth')) #(['base_layer.weight', 'base_layer.bias', 'lora_A.default.weight', 'lora_B.default.weight'])
+
 
     if training_args.lora_enable:
         state_dict = get_peft_state_maybe_zero_3(

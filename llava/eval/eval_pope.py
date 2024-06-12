@@ -2,6 +2,32 @@ import os
 import json
 import argparse
 
+def calculate_metrics(TP, TN, FP, FN):
+    if TP + FP == 0:
+        precision = 0
+    else:
+        precision = float(TP) / float(TP + FP)
+
+    if TP + FN == 0:
+        recall = 0
+    else:
+        recall = float(TP) / float(TP + FN)
+
+    if precision + recall == 0:
+        f1 = 0
+    else:
+        f1 = 2 * precision * recall / (precision + recall)
+
+    total_samples = TP + TN + FP + FN
+    if total_samples == 0:
+        acc = 0
+    else:
+        acc = (TP + TN) / total_samples
+
+    return precision, recall, f1, acc
+
+
+
 def eval_pope(answers, label_file):
     label_list = [json.loads(q)['label'] for q in open(label_file, 'r')]
 
@@ -50,10 +76,13 @@ def eval_pope(answers, label_file):
     print('TP\tFP\tTN\tFN\t')
     print('{}\t{}\t{}\t{}'.format(TP, FP, TN, FN))
 
-    precision = float(TP) / float(TP + FP)
-    recall = float(TP) / float(TP + FN)
-    f1 = 2*precision*recall / (precision + recall)
-    acc = (TP + TN) / (TP + TN + FP + FN)
+    # precision = float(TP) / float(TP + FP)
+    # recall = float(TP) / float(TP + FN)
+    # f1 = 2*precision*recall / (precision + recall)
+    # acc = (TP + TN) / (TP + TN + FP + FN)
+
+
+    precision, recall, f1, acc= calculate_metrics(TP, TN, FP, FN)
     print('Accuracy: {}'.format(acc))
     print('Precision: {}'.format(precision))
     print('Recall: {}'.format(recall))

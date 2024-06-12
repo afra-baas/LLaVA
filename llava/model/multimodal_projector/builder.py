@@ -32,6 +32,8 @@ class SimpleResBlock(nn.Module):
 
 def build_vision_projector(config, delay_load=False, **kwargs):
     projector_type = getattr(config, 'mm_projector_type', 'linear')
+    # TODO: find config and make change there
+    # print("config.mm_hidden_size, config.hidden_size", config.mm_hidden_size, config.hidden_size) #1024 4096
 
     if projector_type == 'linear':
         return nn.Linear(config.mm_hidden_size, config.hidden_size)

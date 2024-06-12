@@ -13,7 +13,7 @@ from llava.mm_utils import tokenizer_image_token, process_images, get_model_name
 
 from PIL import Image
 import math
-
+import requests
 
 def split_list(lst, n):
     """Split a list into n (roughly) equal-sized chunks"""
@@ -41,32 +41,48 @@ def eval_model(args):
     for i, line in enumerate(tqdm(questions)):
         idx = line["id"]
         question = line['conversations'][0]
+        # print('question[value]',question['value'])
         qs = question['value'].replace('<image>', '').strip()
         cur_prompt = qs
 
         if 'image' in line:
             image_file = line["image"]
-            image = Image.open(os.path.join(args.image_folder, image_file))
+            
+            # if image_file.startswith("http") or image_file.startswith("https"):
+            #     response =requests.get(image_file, stream=True)
+            #     image = Image.open(response.raw).convert('RGB')
+            # else:
+            # .convert('RGB') is added by me!
+            image = Image.open(os.path.join(args.image_folder, image_file)).convert('RGB')
+
             image_tensor = process_images([image], image_processor, model.config)[0]
             images = image_tensor.unsqueeze(0).half().cuda()
             image_sizes = [image.size]
+            
             if getattr(model.config, 'mm_use_im_start_end', False):
                 qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + qs
+                # print("mm_use_im_start_end true qs",qs)
             else:
                 qs = DEFAULT_IMAGE_TOKEN + '\n' + qs
+                # print("mm_use_im_start_end false qs",qs) # komt hier
+
             cur_prompt = '<image>' + '\n' + cur_prompt
         else:
             images = None
             image_sizes = None
 
         if args.single_pred_prompt:
+            print('single_pred_prompt is true')
             qs = qs + '\n' + "Answer with the option's letter from the given choices directly."
             cur_prompt = cur_prompt + '\n' + "Answer with the option's letter from the given choices directly."
+        # print('cur_prompt', cur_prompt)
 
         conv = conv_templates[args.conv_mode].copy()
         conv.append_message(conv.roles[0], qs)
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
+
+        # print('prompt', prompt)
 
         input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda()
 
@@ -82,6 +98,7 @@ def eval_model(args):
             )
 
         outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
+        # print('outputs', outputs)
 
         ans_id = shortuuid.uuid()
         ans_file.write(json.dumps({"question_id": idx,
@@ -106,6 +123,7 @@ if __name__ == "__main__":
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--answer-prompter", action="store_true")
     parser.add_argument("--single-pred-prompt", action="store_true")
+    parser.add_argument("--depth-path", type=str) 
     args = parser.parse_args()
 
     eval_model(args)

@@ -12,15 +12,31 @@ from llava.train.train import *
 import torch.nn as nn
 import torch.nn.init as init
 
+from transformers.generation.utils import GenerateOutput
+from typing import List, Optional, Tuple, Union
+
 class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     config_class = LlavaConfig
     torch.manual_seed(25)
 
     def __init__(self, config):
         super(DepthLlavaLlamaForCausalLM, self).__init__(config)
-        self.conv1x1 = nn.Conv2d(4, 3, kernel_size=1).half()
-        self.conv1x1 = self.conv1x1.to(self.device)
+        self.conv1x1 = nn.Conv2d(4, 3, kernel_size=1)#.half()
+        # self.conv1x1.requires_grad_(True)
+        # self.conv1x1 = self.conv1x1.to(self.device)
         self.conv_weights_path = 'conv1x1_weights.pth'
+        print('state_dict conv init', self.conv1x1.state_dict()) 
+
+    # TODO: change to _init_weights everywhere
+    def initialize_weights(self):
+        print("CHECK: initialize_weights")
+        nn.init.xavier_uniform_(self.conv1x1.weight, gain=nn.init.calculate_gain('relu'))
+        nn.init.zeros_(self.conv1x1.bias)
+        print('state_dict conv initialize_weights', self.conv1x1.state_dict()) 
+        file = "/project/train_custom_conv_state_dict.txt"
+        with open(file, "w") as f:
+            f.write(f'state_dict conv after init weights: \n{self.conv1x1.state_dict()}')
+
 
     def forward(
         self,
@@ -75,11 +91,45 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
             return_dict=return_dict
         )
     
+    @torch.no_grad()
+    def generate(
+        self,
+        inputs: Optional[torch.Tensor] = None,
+        images: Optional[torch.Tensor] = None,
+        depth_images: Optional[torch.Tensor] = None,
+        image_sizes: Optional[torch.Tensor] = None,
+        **kwargs,
+    ) -> Union[GenerateOutput, torch.LongTensor]:
+        
+        # print("kwargs", kwargs)
+        if "inputs_embeds" in kwargs:
+            raise NotImplementedError("`inputs_embeds` is not supported")
+        
+        # print("DepthLlavaLlamaForCausalLM generate")
+        # print("MRO:", [cls.__name__ for cls in DepthLlavaLlamaForCausalLM.mro()])
+        
+        if images is not None:
+            depth_images = depth_images.mean(dim=1, keepdim=True)
+            images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336]) -> torch.Size([16, 3, 336, 336])
+            # images = torch.cat((images, depth_images), dim=-1)  # dim 1 or -1? #torch.Size([16, 3, 336, 672])
+            # print("image and depth map concatenated before encoder in generate")
+
+        return super().generate(
+            inputs,
+            images,
+            image_sizes=image_sizes,
+            **kwargs,
+        )
+    
     def encode_images(self, images):
+        # print(type(self.conv1x1)) #<class 'torch.nn.modules.conv.Conv2d'>  
+        # print(type(images)) #<class 'torch.Tensor'>
         images = self.conv1x1(images)
+        # print("(images.shape na conv1x1", images.shape)
         return super().encode_images(images)
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):
+        # print("prepare_inputs_for_generation")
         images = kwargs.pop("images", None)
         depth_images = kwargs.pop("depth_images", None)
         _inputs = super().prepare_inputs_for_generation(
@@ -105,15 +155,10 @@ class DepthSupervisedDataset(LazySupervisedDataset):
     def __getitem__(self, i):
         data_dict = super().__getitem__(i)
         if 'image' in self.list_data_dict[i] and isinstance(self.list_data_dict[i]['image'], str):
-            image_file = Path(self.list_data_dict[i]['image']).name
-            image_folder = self.depth_path
+            image_name = Path(self.list_data_dict[i]['image']).name
+            depth_folder = self.depth_path
+            depth_image = Image.open(os.path.join(depth_folder, image_name)).convert('RGB')
             processor = self.data_args.image_processor
-
-            if image_file.startswith("http") or image_file.startswith("https"):
-                response = requests.get(image_file)
-                depth_image = Image.open(BytesIO(response.content))
-            else:
-                depth_image = Image.open(os.path.join(image_folder, image_file))
 
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
@@ -156,13 +201,13 @@ def custom_make_supervised_data_module(tokenizer, data_args):
     train_dataset = DepthSupervisedDataset(tokenizer=tokenizer,
                                 data_path=data_args.data_path,
                                 data_args=data_args,
-                                depth_path='/project/vsr_depth/train/')
+                                depth_path=data_args.depth_path_train)
     
     eval_dataset = DepthSupervisedDataset(tokenizer=tokenizer,
                             data_path=data_args.validation_data_path,
                             data_args=data_args,
-                            depth_path='/project/vsr_depth/val/') 
-    
+                            depth_path=data_args.depth_path_val) 
+    # depth_path='/project/msc-thesis-project/vsr_depth/val/'
 
     data_collator = DataCollatorForDepthSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
@@ -217,6 +262,7 @@ def train():
                 cache_dir=training_args.cache_dir,
                 **bnb_model_from_pretrained_args
             )
+            model.initialize_weights()
     else:
         model = transformers.LlamaForCausalLM.from_pretrained(
             model_args.model_name_or_path,
@@ -226,7 +272,17 @@ def train():
     model.config.use_cache = False
 
     if model_args.freeze_backbone:
+        print('model_args.freeze_backbone')
         model.model.requires_grad_(False)
+
+    # so llm is frozen but then later lora unfreezes it 
+    # model_name = model.__class__.__name__
+    # file = "/project/train_custom_conv_all_requires_grad_should_be_only_conv_test.txt"
+    # with open(file, "w") as f:
+    #     f.write(f"Model name: {model_name}\n")
+    #     for name, param in model.named_parameters():
+    #         # if param.requires_grad:
+    #         f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
 
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training
@@ -240,6 +296,14 @@ def train():
             def make_inputs_require_grad(module, input, output):
                 output.requires_grad_(True)
             model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+
+    # model_name = model.__class__.__name__
+    # file = "/project/train_custom_conv_all_requires_grad_should_be_only_conv_test.txt"
+    # with open(file, "w") as f:
+    #     f.write(f"Model name: {model_name}\n")
+    #     for name, param in model.named_parameters():
+    #         # if param.requires_grad:
+    #         f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
 
     if training_args.lora_enable:
         from peft import LoraConfig, get_peft_model
@@ -257,7 +321,19 @@ def train():
             if training_args.fp16:
                 model.to(torch.float16)
         rank0_print("Adding LoRA adapters...")
-        model = get_peft_model(model, lora_config)
+        # model = get_peft_model(model, lora_config)
+
+    # I added 
+    model.lm_head.weight.requires_grad = False
+    # print(model.lm_head.weight)
+
+    # model_name = model.__class__.__name__
+    # file = "/project/train_custom_conv_all_requires_grad_should_be_only_conv_test2.txt"
+    # with open(file, "w") as f:
+    #     f.write(f"Model name: {model_name}\n")
+    #     for name, param in model.named_parameters():
+    #         # if param.requires_grad:
+    #         f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
 
     # Tokenizer init
     if 'mpt' in model_args.model_name_or_path:
@@ -310,17 +386,46 @@ def train():
 
         model.config.tune_mm_mlp_adapter = training_args.tune_mm_mlp_adapter = model_args.tune_mm_mlp_adapter
         if model_args.tune_mm_mlp_adapter:
+            print('Let op!!! model.requires_grad_(False)')
             model.requires_grad_(False)
             for p in model.get_model().mm_projector.parameters():
                 p.requires_grad = True
 
         model.config.freeze_mm_mlp_adapter = training_args.freeze_mm_mlp_adapter
-        if training_args.freeze_mm_mlp_adapter:
+        if training_args.freeze_mm_mlp_adapter: # what is the mm_mlp_adapter?
             for p in model.get_model().mm_projector.parameters():
                 p.requires_grad = False
 
         if training_args.bits in [4, 8]:
             model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
+
+        model.conv1x1.requires_grad_(True)
+
+        from peft.tuners.lora import LoraLayer
+        model_name = model.__class__.__name__
+        file = "/project/train_custom_conv_all_requires_grad_should_be_only_conv.txt"
+        with open(file, "w") as f:
+            f.write(f"Model name: {model_name}\n")
+            for name, param in model.named_parameters():
+                # if param.requires_grad:
+                f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
+            trainable_params = sum(
+                p.numel() for p in model.parameters() if p.requires_grad)
+            f.write(f"Trainable parameters: {trainable_params}\n")
+            total_params = sum(p.numel() for p in model.parameters())
+            f.write(f"Total parameters: {total_params}\n")
+
+            trainable_lora_params=0
+            total_lora_params=0
+            for name, module in model.named_modules():
+                if isinstance(module, LoraLayer):
+                    for param_name, param in module.named_parameters():
+                        if param.requires_grad:
+                            trainable_lora_params += param.numel()
+                        total_lora_params += param.numel()
+            f.write(f"Trainable parameters in LoRA layers: {trainable_lora_params}\n")
+            f.write(f"Total parameters in LoRA layers: {total_lora_params}\n")
+
 
         model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
         model.config.mm_projector_lr = training_args.mm_projector_lr
@@ -341,10 +446,13 @@ def train():
                     if training_args.bf16 and module.weight.dtype == torch.float32:
                         module = module.to(torch.bfloat16)
 
+
     # Data init, replaced with custom dataset for including depth maps
     data_module = custom_make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
-   
+    
+
+    
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,
                     args=training_args,
@@ -359,9 +467,20 @@ def train():
 
     torch.cuda.empty_cache()
     model.config.use_cache = True
+
+    conv1x1_state_dict = model.conv1x1.state_dict()
+    # Check for NaNs, -inf, and inf 
+    weight_has_issue = torch.isnan(conv1x1_state_dict['weight']).any() or torch.isinf(conv1x1_state_dict['weight']).any()
+    bias_has_issue = torch.isnan(conv1x1_state_dict['bias']).any() or torch.isinf(conv1x1_state_dict['bias']).any()
+
+    # Print the results
+    print("Weight has NaN, -inf, or inf:", weight_has_issue)
+    print("Bias has NaN, -inf, or inf:", bias_has_issue)
+
+    print('state_dict conv before save', conv1x1_state_dict) 
     weight_path = os.path.join(training_args.output_dir, model.conv_weights_path)
     print('weight path', weight_path)
-    torch.save(model.conv1x1.state_dict(), weight_path)
+    torch.save(conv1x1_state_dict, weight_path)
 
     if training_args.lora_enable:
         state_dict = get_peft_state_maybe_zero_3(
@@ -377,6 +496,10 @@ def train():
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
+
+    file = "/project/train_custom_conv_state_dict.txt"
+    with open(file, "a") as f:
+        f.write(f'state_dict conv before save: \n{conv1x1_state_dict}')
 
 
 if __name__ == "__main__":

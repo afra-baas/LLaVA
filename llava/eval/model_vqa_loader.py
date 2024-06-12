@@ -14,6 +14,8 @@ from torch.utils.data import Dataset, DataLoader
 
 from PIL import Image
 import math
+import requests
+from io import BytesIO
 
 
 def split_list(lst, n):
@@ -50,7 +52,35 @@ class CustomDataset(Dataset):
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
 
-        image = Image.open(os.path.join(self.image_folder, image_file)).convert('RGB')
+        # image = Image.open(os.path.join(self.image_folder, image_file)).convert('RGB')
+        if 'COCO_val2014' in image_file: # if POPE
+            if 'train' in image_file:
+                url=f'http://images.cocodataset.org/train2014/{image_file}'
+            if 'test' in image_file:
+                url=f'http://images.cocodataset.org/test2014/{image_file}'
+            else:
+                url=f'http://images.cocodataset.org/val2014/{image_file}'
+            # if url.startswith("http") or url.startswith("https"):
+            try:
+                response = requests.get(url, stream=True)
+                image = Image.open(response.raw).convert('RGB')
+            except Exception as e:
+                print(f"Error loading image from URL {url}: {e}")
+                try:
+                    response = requests.get(url, stream=True)
+                    image = Image.open(response.raw).convert('RGB')
+                except Exception as e:
+                    print(f"second time Error loading image from URL {url}: {e}")
+                    try:
+                        if url.startswith("http") or url.startswith("https"):
+                            response = requests.get(url)
+                            image_data = BytesIO(response.content)
+                            image = Image.open(image_data).convert('RGB')
+                    except Exception as e:
+                        print(f"Failed to download image from URL: {url}. Status code: {response.status_code}")
+        else:
+            image = Image.open(os.path.join(self.image_folder, image_file)).convert('RGB')
+
         image_tensor = process_images([image], self.image_processor, self.model_config)[0]
 
         input_ids = tokenizer_image_token(prompt, self.tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt')

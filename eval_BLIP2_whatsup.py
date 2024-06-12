@@ -179,19 +179,11 @@ if __name__ == "__main__":
 
     model = Blip2ForConditionalGeneration.from_pretrained("Salesforce/blip2-opt-2.7b", torch_dtype=torch.float16)
     processor = AutoProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
-
-    # model = Blip2ForConditionalGeneration.from_pretrained("Salesforce/blip2-opt-2.7b", load_in_8bit=True, device_map="auto")
-    # image_processor = BlipImageProcessor.from_pretrained("Salesforce/blip2-opt-2.7b")
-    # tokenizer = AutoTokenizer.from_pretrained("Salesforce/blip2-opt-2.7b")
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model.to(device)
 
-    # image_processor_class = "BlipImageProcessor"
-    # tokenizer_class = "AutoTokenizer"
-
-
-    test_file="whatsup_test_classification_controlled_images.json"
-    CKPT="blip-2"
+    test_file="whatsup_test_classification_controlled_images_new.json"
+    CKPT="blip-2_new"
     root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup"
 
     parser = argparse.ArgumentParser()
@@ -204,9 +196,9 @@ if __name__ == "__main__":
     parser.add_argument("--temperature", type=float, default=0)
     args = parser.parse_args(args=[])
 
-    model_name ='BLIP-2'
+    model_name ='BLIP-2_new'
     context_len=100
-    # eval_model(args, model_name, model, processor, context_len)
+    eval_model(args, model_name, model, processor, context_len)
 
 
     parser2 = argparse.ArgumentParser()

@@ -132,6 +132,11 @@ class LengthGroupedSampler(Sampler):
 
 class LLaVATrainer(Trainer):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.best_metric = float('-inf')  # or float('inf') depending on the metric you want to maximize/minimize
+        self.best_model_path = None
+
     def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
         if self.train_dataset is None or not has_length(self.train_dataset):
             return None
@@ -146,8 +151,6 @@ class LLaVATrainer(Trainer):
             )
         else:
             return super()._get_train_sampler()
-    
-    # _get_eval_sampler(self)
 
     def create_optimizer(self):
         """
@@ -230,6 +233,7 @@ class LLaVATrainer(Trainer):
         return self.optimizer
 
     def _save_checkpoint(self, model, trial, metrics=None):
+        print('LLaVATrainer _save_checkpoint')
         if getattr(self.args, 'tune_mm_mlp_adapter', False):
             from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
             checkpoint_folder = f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
@@ -248,7 +252,17 @@ class LLaVATrainer(Trainer):
                 self.model.config.save_pretrained(output_dir)
                 torch.save(weight_to_save, os.path.join(output_dir, f'mm_projector.bin'))
         else:
-            super(LLaVATrainer, self)._save_checkpoint(model, trial, metrics)
+            # super(LLaVATrainer, self)._save_checkpoint(model, trial, metrics)
+            
+            # Check if the current model is the best based on the evaluation metric
+            current_metric = metrics.get(self.args.metric_for_best_model, self.best_metric)
+            if current_metric > self.best_metric:
+                self.best_metric = current_metric
+                self.best_model_path = os.path.join(self._get_output_dir(trial=trial), f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}")
+                super(LLaVATrainer, self)._save_checkpoint(model, trial, metrics)
+            else:
+                # Save the current checkpoint, but don't update the best model
+                super(LLaVATrainer, self)._save_checkpoint(model, trial, metrics)
 
     def _save(self, output_dir: Optional[str] = None, state_dict=None):
         if getattr(self.args, 'tune_mm_mlp_adapter', False):

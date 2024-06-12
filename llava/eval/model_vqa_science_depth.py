@@ -7,13 +7,12 @@ import shortuuid
 
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.conversation import conv_templates, SeparatorStyle
-from llava.model.builder import load_pretrained_model
+from llava.model.builder_depth import load_pretrained_model
 from llava.utils import disable_torch_init
 from llava.mm_utils import tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
 
 from PIL import Image
 import math
-from io import BytesIO
 import requests
 
 def split_list(lst, n):
@@ -48,18 +47,26 @@ def eval_model(args):
         if 'image' in line:
             image_file = line["image"]
             if image_file.startswith("http") or image_file.startswith("https"):
-                response = requests.get(image_file)
-                image = Image.open(BytesIO(response.content))
+                response =requests.get(image_file, stream=True)
+                image = Image.open(response.raw).convert('RGB')
             else:
-                image = Image.open(os.path.join(args.image_folder, image_file))
+                image = Image.open(os.path.join(args.image_folder, image_file)).convert('RGB')
+            
             image_tensor = image_processor.preprocess(image, return_tensors='pt')['pixel_values'][0]
             images = image_tensor.unsqueeze(0).half().cuda()
+            image_sizes = [image.size]
+
             # add depth images 
-            split=image_file.split('/')[-2].replace('2017', '')
-            depth_path=f'/project/new_vsr_depth/{split}/'
-            depth_images = Image.open(os.path.join(depth_path, image_file.split('/')[-1]))
-            depth_tensor = image_processor.preprocess(depth_images, return_tensors='pt')['pixel_values'][0]
+            if args.depth_path=="vsr":
+                split=image_file.split('/')[-2].replace('2017', '')
+                depth_path=f'../new_vsr_depth/{split}/'
+            else:
+                depth_path=args.depth_path
+                
+            depth_image = Image.open(os.path.join(depth_path, image_file.split('/')[-1])).convert('RGB')
+            depth_tensor = image_processor.preprocess(depth_image, return_tensors='pt')['pixel_values'][0]
             depth_images = depth_tensor.unsqueeze(0).half().cuda()
+            depth_image_sizes = [depth_image.size]
 
             if getattr(model.config, 'mm_use_im_start_end', False):
                 qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + qs
@@ -67,7 +74,10 @@ def eval_model(args):
                 qs = DEFAULT_IMAGE_TOKEN + '\n' + qs
             cur_prompt = '<image>' + '\n' + cur_prompt
         else:
+            print('====================hierr images is None')
             images = None
+            image_sizes = None
+            depth_image_sizes = None
 
         if args.single_pred_prompt:
             qs = qs + '\n' + "Answer with the option's letter from the given choices directly."
@@ -79,59 +89,30 @@ def eval_model(args):
         prompt = conv.get_prompt()
 
         input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda()
+        
+        # stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
+        # keywords = [stop_str]
+        # stopping_criteria = [KeywordsStoppingCriteria(keywords, tokenizer, input_ids)] if conv.version == "v0" else None
+        # print("stopping_criteria", stopping_criteria)
 
-        stop_str = conv.sep if conv.sep_style != SeparatorStyle.TWO else conv.sep2
-        keywords = [stop_str]
-        stopping_criteria = [KeywordsStoppingCriteria(keywords, tokenizer, input_ids)] if conv.version == "v0" else None
+        # print('image_sizes', image_sizes) #[(1280, 960)]   
+        # print('depth_image_sizes', depth_image_sizes) #[(1280, 960)]   
 
         with torch.inference_mode():
             output_ids = model.generate(
                 input_ids,
                 images=images,
                 depth_images=depth_images,
-                do_sample=True if args.temperature > 0 else False,
-                temperature=args.temperature,
+                image_sizes=image_sizes, # added
+                do_sample= False, #True if args.temperature > 0 else False,
+                # temperature=args.temperature,
                 max_new_tokens=1024,
                 use_cache=True,
-                stopping_criteria=stopping_criteria,
+                # stopping_criteria=stopping_criteria,
             )
 
-        input_token_len = input_ids.shape[1]
-        n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
-        if n_diff_input_output > 0:
-            print(f'[Warning] {n_diff_input_output} output_ids are not the same as the input_ids')
-        outputs = tokenizer.batch_decode(output_ids[:, input_token_len:], skip_special_tokens=True)[0]
-        outputs = outputs.strip()
-        if outputs.endswith(stop_str):
-            outputs = outputs[:-len(stop_str)]
-        outputs = outputs.strip()
-
-        # prompt for answer
-        if args.answer_prompter:
-            outputs_reasoning = outputs
-            input_ids = tokenizer_image_token(prompt + outputs_reasoning + ' ###\nANSWER:', tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda()
-
-            with torch.inference_mode():
-                output_ids = model.generate(
-                    input_ids,
-                    images=images,
-                    depth_images=depth_images,
-                    do_sample=True if args.temperature > 0 else False,
-                    temperature=args.temperature,
-                    max_new_tokens=64,
-                    use_cache=True,
-                    stopping_criteria=[stopping_criteria])
-
-            input_token_len = input_ids.shape[1]
-            n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
-            if n_diff_input_output > 0:
-                print(f'[Warning] {n_diff_input_output} output_ids are not the same as the input_ids')
-            outputs = tokenizer.batch_decode(output_ids[:, input_token_len:], skip_special_tokens=True)[0]
-            outputs = outputs.strip()
-            if outputs.endswith(stop_str):
-                outputs = outputs[:-len(stop_str)]
-            outputs = outputs.strip()
-            outputs = outputs_reasoning + '\n The answer is ' + outputs
+        outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
+        # print("outputs: ", outputs)
 
         ans_id = shortuuid.uuid()
         ans_file.write(json.dumps({"question_id": idx,
@@ -156,6 +137,7 @@ if __name__ == "__main__":
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--answer-prompter", action="store_true")
     parser.add_argument("--single-pred-prompt", action="store_true")
+    parser.add_argument("--depth-path", type=str)
     args = parser.parse_args()
 
     eval_model(args)

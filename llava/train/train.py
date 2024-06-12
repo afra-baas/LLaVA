@@ -32,13 +32,23 @@ from torch.utils.data import Dataset
 from llava.train.llava_trainer import LLaVATrainer
 
 from llava import conversation as conversation_lib
-from llava.model import *
+# from llava.model import *
+from llava.model.language_model.llava_llama import LlavaLlamaForCausalLM, LlavaConfig
+
 from llava.mm_utils import tokenizer_image_token
 
 from PIL import Image
 import requests
+from io import BytesIO
+import time
 
 local_rank = None
+
+# from llava.train.llama_flash_attn_monkey_patch import replace_llama_attn_with_flash_attn
+
+# if __name__=="__main__":
+#     print('using monkey patch')
+#     replace_llama_attn_with_flash_attn()  # Need to call this before importing transformers.
 
 
 def rank0_print(*args):
@@ -55,13 +65,14 @@ class ModelArguments:
     model_name_or_path: Optional[str] = field(default="facebook/opt-125m")
     version: Optional[str] = field(default="v0")
     freeze_backbone: bool = field(default=False)
+    # freeze_backbone: bool = field(default=True)
     tune_mm_mlp_adapter: bool = field(default=False)
     vision_tower: Optional[str] = field(default=None)
     mm_vision_select_layer: Optional[int] = field(default=-1)   # default to the last layer
     pretrain_mm_mlp_adapter: Optional[str] = field(default=None)
     mm_projector_type: Optional[str] = field(default='linear')
     mm_use_im_start_end: bool = field(default=False)
-    mm_use_im_patch_token: bool = field(default=True)
+    mm_use_im_patch_token: bool = field(default=False)
     mm_patch_merge_type: Optional[str] = field(default='flat')
     mm_vision_select_feature: Optional[str] = field(default="patch")
 
@@ -79,6 +90,11 @@ class DataArguments:
             default=None,
             metadata={"help": "Path to the validation data."}
         )
+    depth_path_train: Optional[str] = field(default=None,
+                           metadata={"help": "Path to the depth data."})
+    
+    depth_path_val: Optional[str] = field(default=None,
+                           metadata={"help": "Path to the depth data."})
 
 
 @dataclass
@@ -87,6 +103,7 @@ class TrainingArguments(transformers.TrainingArguments):
     optim: str = field(default="adamw_torch")
     remove_unused_columns: bool = field(default=False)
     freeze_mm_mlp_adapter: bool = field(default=False)
+    # freeze_mm_mlp_adapter: bool = field(default=True)
     mpt_attn_impl: Optional[str] = field(default="triton")
     model_max_length: int = field(
         default=512,
@@ -115,7 +132,6 @@ class TrainingArguments(transformers.TrainingArguments):
     lora_bias: str = "none"
     mm_projector_lr: Optional[float] = None
     group_by_modality_length: bool = field(default=False)
-
 
 def maybe_zero_3(param, ignore_status=False, name=None):
     from deepspeed import zero
@@ -192,6 +208,7 @@ def safe_save_model_for_hf_trainer(trainer: transformers.Trainer,
     """Collects the state dict and dump to disk."""
 
     if getattr(trainer.args, "tune_mm_mlp_adapter", False):
+        print('getattr(trainer.args, "tune_mm_mlp_adapter", False)')
         # Only save Adapter
         keys_to_match = ['mm_projector']
         if getattr(trainer.args, "use_im_start_end", False):
@@ -429,8 +446,9 @@ def preprocess_v1(
     for i, source in enumerate(sources):
         if roles[source[0]["from"]] != conv.roles[0]:
             # Skip the first one if it is not from human
+            print('skip the first one if it is not from human')
             source = source[1:]
-
+        
         conv.messages = []
         for j, sentence in enumerate(source):
             role = roles[sentence["from"]]
@@ -438,9 +456,22 @@ def preprocess_v1(
             conv.append_message(role, sentence["value"])
         conversations.append(conv.get_prompt())
 
+        # conv.messages = []
+        # for j, sentence in enumerate(source):   
+        #     role = roles[sentence["from"]]
+        #     assert role == conv.roles[j % 2], f"{i}"
+        #     # i added <image> to prompt 
+        #     if role == conv.roles[0]:
+        #         qs=sentence["value"]
+        #         qs = DEFAULT_IMAGE_TOKEN + '\n' + qs
+        #         conv.append_message(role, qs)
+        #     else:
+        #         conv.append_message(role, sentence["value"])
+        # conversations.append(conv.get_prompt())
+        
     # Tokenize conversations
-
     if has_image:
+        # print('prompt ', conversations[0])
         input_ids = torch.stack([tokenizer_image_token(prompt, tokenizer, return_tensors='pt') for prompt in conversations], dim=0)
     else:
         input_ids = tokenizer(
@@ -495,7 +526,7 @@ def preprocess_v1(
                     f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
                     f" (ignored)"
                 )
-
+    # print('input_ids',input_ids.shape) # e.g. [1,100]
     return dict(
         input_ids=input_ids,
         labels=targets,
@@ -625,13 +656,19 @@ def preprocess(
     4. Make a deepcopy as the target. Mask human words with IGNORE_INDEX.
     """
     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.PLAIN:
+        print("preprocess_plain")
         return preprocess_plain(sources, tokenizer)
     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.LLAMA_2:
+        print("preprocess_llama_2")
         return preprocess_llama_2(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version.startswith("v1"):
+        # print("preprocess_v1") #hier 
         return preprocess_v1(sources, tokenizer, has_image=has_image)
     if conversation_lib.default_conversation.version == "mpt":
+        print("preprocess_mpt")
         return preprocess_mpt(sources, tokenizer, has_image=has_image)
+    
+    print('-----comesss here---')
     # add end signal and concatenate together
     conversations = []
     for source in sources:
@@ -701,17 +738,20 @@ class LazySupervisedDataset(Dataset):
         assert len(sources) == 1, "Don't know why it is wrapped to a list"  # FIXME
         if 'image' in sources[0]:
             image_file = self.list_data_dict[i]['image']
-            image_folder = self.data_args.image_folder
             processor = self.data_args.image_processor
-            # image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
 
-            url = os.path.join(image_folder, image_file)
-            if url.startswith("http") or url.startswith("https"):
-                response = requests.get(url, stream=True)
-                image = Image.open(response.raw)
+            # print('image_file: ', image_file)
+            if image_file.startswith("http") or image_file.startswith("https"):
+                print("Removee download from internet")
+                image_folder = self.data_args.image_folder
+                image_name = self.list_data_dict[i]['id']
+                image_path= os.path.join(image_folder, image_name)
+                if os.path.exists(image_path) == False:
+                    print('os.path.exists(image_path) == False')
             else:
-                image = Image.open(url)
-
+                image_path= image_file
+            # print("image_path: ", image_path)
+            image = Image.open(image_path).convert('RGB')
 
 
             if self.data_args.image_aspect_ratio == 'pad':
@@ -727,15 +767,6 @@ class LazySupervisedDataset(Dataset):
                         result = Image.new(pil_img.mode, (height, height), background_color)
                         result.paste(pil_img, ((height - width) // 2, 0))
                         return result
-                # print('-------image_mean -------')
-                # print(processor.imagetmux _mean)
-                # print(tuple(int(x*255) for x in processor.image_mean))    
-                if tuple(int(x*255) for x in processor.image_mean) != (122, 116, 104):
-                    print(tuple(int(x*255) for x in processor.image_mean))
-                    print(type(image))
-                    image.show()
-
-                
                 image = expand2square(image, tuple(int(x*255) for x in processor.image_mean))
                 image = processor.preprocess(image, return_tensors='pt')['pixel_values'][0]
             else:
@@ -745,6 +776,7 @@ class LazySupervisedDataset(Dataset):
                 self.data_args)
         else:
             sources = copy.deepcopy([e["conversations"] for e in sources])
+        # print('len(sources)',len(sources)) #1
         data_dict = preprocess(
             sources,
             self.tokenizer,
@@ -954,6 +986,7 @@ def train(attn_implementation=None):
 
         model.config.tune_mm_mlp_adapter = training_args.tune_mm_mlp_adapter = model_args.tune_mm_mlp_adapter
         if model_args.tune_mm_mlp_adapter:
+            print('comes in tune_mm_mlp_adapter')# un/freeze everything...
             model.requires_grad_(False)
             for p in model.get_model().mm_projector.parameters():
                 p.requires_grad = True
@@ -966,10 +999,47 @@ def train(attn_implementation=None):
         if training_args.bits in [4, 8]:
             model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
 
+
+        # check if projection is being trained -> base_model.model.model.mm_projector -> all weights and bias are true
+        from peft.tuners.lora import LoraLayer
+        model_name = model.__class__.__name__
+        file = "/project/train_nodepth.txt"
+        with open(file, "w") as f:
+            f.write(f"Model name: {model_name}\n")
+            for name, param in model.named_parameters():
+                # if param.requires_grad:
+                f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
+            trainable_params = sum(
+                p.numel() for p in model.parameters() if p.requires_grad)
+            f.write(f"Trainable parameters: {trainable_params}\n")
+            total_params = sum(p.numel() for p in model.parameters())
+            f.write(f"Total parameters: {total_params}\n")
+
+            trainable_lora_params=0
+            total_lora_params=0
+            for name, module in model.named_modules():
+                if isinstance(module, LoraLayer):
+                    for param_name, param in module.named_parameters():
+                        if param.requires_grad:
+                            trainable_lora_params += param.numel()
+                        total_lora_params += param.numel()
+            f.write(f"Trainable parameters in LoRA layers: {trainable_lora_params}\n")
+            f.write(f"Total parameters in LoRA layers: {total_lora_params}\n")
+
+        file = "/project/train_nodepth_mm_proj.txt"
+        with open(file, "w") as f:
+            for name, param in model.get_model().mm_projector.named_parameters():
+                f.write(f"Parameter: {name}\n")
+                # if param.requires_grad:
+                f.write(f"{param}\n")
+                f.write("----------------------------------------------")
+                f.write("\n")
+
         model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
         model.config.mm_projector_lr = training_args.mm_projector_lr
         training_args.use_im_start_end = model_args.mm_use_im_start_end
         model.config.mm_use_im_patch_token = model_args.mm_use_im_patch_token
+        print('model.config.mm_use_im_patch_token', model.config.mm_use_im_patch_token)
         model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
 
     if training_args.bits in [4, 8]:
@@ -987,6 +1057,9 @@ def train(attn_implementation=None):
 
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
+    
+    torch.cuda.empty_cache()
+
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,
                     args=training_args,
@@ -1014,6 +1087,14 @@ def train(attn_implementation=None):
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
+        
+    file = "/project/train_nodepth_mm_proj.txt"
+    with open(file, "a") as f:
+        for name, param in model.get_model().mm_projector.named_parameters():
+            f.write(f"Parameter: {name}\n")
+            # if param.requires_grad:
+            f.write(f"{param}\n")
+            f.write("----------------------------------------------")
 
 
 if __name__ == "__main__":

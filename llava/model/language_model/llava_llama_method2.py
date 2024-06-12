@@ -28,7 +28,7 @@ from ..llava_arch_method2 import LlavaMetaModel, LlavaMetaForCausalLM
 
 
 class LlavaConfig(LlamaConfig):
-    model_type = "llava_llama"
+    model_type = "llava_llama_method2"
     # model_type = "llava"
 
 
@@ -115,9 +115,12 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
     ) -> Union[GenerateOutput, torch.LongTensor]:
         position_ids = kwargs.pop("position_ids", None)
         attention_mask = kwargs.pop("attention_mask", None)
+
+        print("LlavaLlamaForCausalLM generate method2")
+
         if "inputs_embeds" in kwargs:
             raise NotImplementedError("`inputs_embeds` is not supported")
-
+        
         if images is not None:
             (
                 inputs,
@@ -136,6 +139,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 depth_images,
                 image_sizes=image_sizes
             )
+            print('out of prepare_inputs_labels_for_multimodal method2')
         else:
             inputs_embeds = self.get_model().embed_tokens(inputs)
 
@@ -145,6 +149,31 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             inputs_embeds=inputs_embeds,
             **kwargs
         )
+
+        # result_1 = super().forward(
+        #     position_ids=position_ids,
+        #     attention_mask=attention_mask,
+        #     inputs_embeds=inputs_embeds,
+        #     # **kwargs
+        # )
+
+        # print("result_1 logits", result_1["logits"][0])  
+        
+        # print("result_1", result_1["logits"].shape) #torch.Size([1, 638, 32000])      
+        # print("result_1", len(result_1['past_key_values'])) # batchsize 32
+        # print("result_1", result_1['past_key_values'][-1][-1])
+        # print("result_1", result_1['past_key_values'])
+
+
+        # result = super().generate(
+        #         position_ids=position_ids,
+        #         attention_mask=attention_mask,
+        #         inputs_embeds=inputs_embeds,
+        #         **kwargs
+        #     )
+        # print(result)
+        # print("LlamaForCausalLM generate() called method 2")
+        # return result
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None,
                                       inputs_embeds=None, **kwargs):
@@ -159,6 +188,6 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             inputs['image_sizes'] = image_sizes
         return inputs
 
-AutoConfig.register("llava_llama", LlavaConfig)
+AutoConfig.register("llava_llama_method2", LlavaConfig)
 # AutoConfig.register("llava", LlavaConfig)
 AutoModelForCausalLM.register(LlavaConfig, LlavaLlamaForCausalLM)

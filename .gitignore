@@ -7,8 +7,8 @@ dist
 # Log
 *.log
 *.log.*
-*.json
-*.jsonl
+# *.json
+# *.jsonl
 
 # Data
 !**/alpaca-data-conversation.json
@@ -23,6 +23,7 @@ wandb
 output
 
 checkpoints
+checkpoints copy
 ckpts*
 
 .ipynb_checkpoints
@@ -33,3 +34,24 @@ ckpts*
 
 # Demo
 serve_images/
+
+playground/data/eval/custom
+playground/data/eval/custom2_copy
+
+scripts/unused
+
+wandb
+
+docs
+notebooks/vqasynth_warehouse_spaces
+
+*.tex
+*.txt
+*.jpg
+*.png
+*.xlsx
+
+
+*.pth
+*.gguf
+*.zip
