@@ -3,7 +3,7 @@
 # answers-file , hier worden de model answers geoutput
 
 
-device=0
+device=1
 
 gpu_list="${CUDA_VISIBLE_DEVICES:-$device}"
 IFS=',' read -ra GPULIST <<< "$gpu_list"
@@ -14,7 +14,7 @@ epochs=3
 version="7b"
 
 # dataset="VSR"
-dataset="VSR_class4"
+# dataset="VSR_class4"
 # dataset="VSR_class"
 # dataset="Whatsup"
 # dataset="VSR_midas"
@@ -34,10 +34,14 @@ dataset="VSR_class4"
 # method="method2" # dont forget to change init in model llava_llama
 # method="dino"
 # method="dino_late"
+method="imagebind"
 
 # "no_depth" "conv" "dino" "late"
 
-for method in "late" ; do
+# for method in "imagebind" ; do
+# for dataset in "VSR" "VSR_f" "Whatsup" ; do
+# for dataset in  "VSR_random" ; do
+for dataset in  "VSR" ; do
 
     TF="False"
 
@@ -51,68 +55,81 @@ for method in "late" ; do
     ################################## VSR ###################################################
     if [ "$dataset" = "VSR" ]; then
         TF="True"
-        CKPT="VSR_TF_epoch${epochs}-${method}-${model}"
-        # CKPT="VSR_random_TF_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_random_class_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_BCE_TF_epoch${epochs}-${method}-${model}"
         # CKPT="Spatialvlm_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_plus_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_TF_plus_BCE_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
 
-        # CKPT="VSR_epoch${epochs}-${method}-${model}"
+
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
         # CKPT="VSR2_epoch${epochs}-${method}-${model}"
         # CKPT="epoch${epochs}-${method}-${model}"
 
         # depth_path="vsr"
         depth_path="/project/msc-thesis-project/all_vsr_depth" 
-        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_TF"
+        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR"
         test_file="VSR_test_TF.json"
         # test_file="VSR_test_TF_for_whatsup.json"
 
+    elif [ "$dataset" = "VSR_f" ]; then
+        TF="True"
+
+        CKPT="VSR_f_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_f_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+
+        depth_path="/project/msc-thesis-project/all_vsr_depth" 
+        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_f"
+        test_file="VSR_test_TF_f.json"
 
     elif [ "$dataset" = "VSR_random" ]; then
         TF="True"
 
-        # CKPT="VSR_random_TF_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_random_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_TF_epoch${epochs}-${method}-${model}"
         # CKPT="VSR2_epoch${epochs}-${method}-${model}"
-        # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
-        CKPT="epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_random_class4_epoch${epochs}-${method}-${model}"
+        # CKPT="epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_random_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
         depth_path="/project/msc-thesis-project/all_vsr_depth" 
-        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_random_TF"
-        # test_file="VSR_random_test_TF.json"
-        test_file="VSR_random_test_TF_for_whatsup.json"
+        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_random"
+        test_file="VSR_random_test_TF.json"
+        # test_file="VSR_random_test_TF_for_whatsup.json"
 
 
     elif [ "$dataset" = "VSR_class" ]; then
         # CKPT="VSR_epoch${epochs}-${method}-${model}"
-        # CKPT="VSR_TF_epoch${epochs}-${method}-${model}_copy"
-        CKPT="VSR_TF_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_class_epoch${epochs}-${method}-${model}"
 
         # depth_path="vsr" 
         depth_path="/project/msc-thesis-project/all_vsr_depth" 
-        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR"
+        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_class"
         test_file="VSR_test_classification.json"
         # test_file="COCO_classification_front_behind_data_with_obj_depths.json"
 
     elif [ "$dataset" = "VSR_random_class" ]; then
-        # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
-        CKPT="VSR2_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_random_class_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR2_epoch${epochs}-${method}-${model}"
         # CKPT="epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_TF_epoch${epochs}-${method}-${model}"
 
 
         depth_path="/project/msc-thesis-project/all_vsr_depth/" 
-        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_random"
+        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_random_class"
         test_file="VSR_random_test_classification.json"
 
 
     elif [ "$dataset" = "VSR_class4" ]; then
-        # CKPT="VSR4_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_imagebind"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_train_only_conv"
-        CKPT="VSR4_epoch${epochs}-${method}-${model}_only_proj2"
+        # CKPT="VSR4_epoch${epochs}-${method}-${model}_only_proj2"
 
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_unfrozen_all"
 
@@ -123,43 +140,46 @@ for method in "late" ; do
 
         # depth_path="vsr" 
         depth_path="/project/msc-thesis-project/all_vsr_depth" 
-        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR4"
+        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_class4"
         test_file="VSR_test_classification4.json"
 
     elif [ "$dataset" = "VSR_midas" ]; then
-        CKPT="VSR_TF_midas_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_midas_epoch${epochs}-${method}-${model}"
 
         # depth_path="vsr"
         depth_path="/project/msc-thesis-project/all_vsr_depth" 
-        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_TF"
+        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_midas"
         test_file="VSR_test_TF_new.json"
 
 
     ################################## Whats Up ###################################################
     elif [ "$dataset" = "Whatsup" ]; then
-        # CKPT="epoch${epochs}-${method}-${model}"
+        CKPT="Whatsup_epoch${epochs}-${method}-${model}"
         # CKPT="Spatialvlm_epoch${epochs}-${method}-${model}"
         # CKPT="VSR2_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_TF_epoch${epochs}-${method}-${model}"
-        CKPT="VSR_TF_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_TF_epoch${epochs}-${method}-${model}"
+        # CKPT="Whatsup_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+
 
         depth_path="/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/"
-        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/whatsup"
+        root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/Whatsup"
         test_file="whatsup_test_classification_controlled_images.json"
 
     ######################################################################################################
     elif [ "$dataset" = "clevr" ]; then
-        # CKPT="epoch${epochs}-${method}-${model}"
-        CKPT="VSR2_epoch${epochs}-${method}-${model}"
+        CKPT="Whatsup_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR2_epoch${epochs}-${method}-${model}"
 
         depth_path="/project/clevr_depth/test"
         root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/clevr"
         test_file="clevr_test.json"
 
     elif [ "$dataset" = "clevr_front_behind" ]; then
-        # CKPT="epoch${epochs}-${method}-${model}"
-        CKPT="VSR2_epoch${epochs}-${method}-${model}"
+        # CKPT="Whatsup_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR2_epoch${epochs}-${method}-${model}"
+
 
         depth_path="/project/clevr_depth/test"
         root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/clevr_bf"
@@ -202,6 +222,10 @@ for method in "late" ; do
         eval_file="llava.eval.model_vqa_science_dino"
     elif [ "$method" = "dino_late" ]; then
         eval_file="llava.eval.model_vqa_science_dino_late"
+    elif [ "$method" = "fmask" ]; then
+        eval_file="llava.eval.model_vqa_science_fmask"
+    elif [ "$method" = "imagebind" ]; then
+        eval_file="llava.eval.model_vqa_science_imagebind"
     else
         echo "Invalid method specified."
         # eval_file="llava.eval.model_vqa_science_depth"

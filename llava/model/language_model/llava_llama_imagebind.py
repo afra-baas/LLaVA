@@ -24,7 +24,7 @@ from transformers import AutoConfig, AutoModelForCausalLM, \
 from transformers.modeling_outputs import CausalLMOutputWithPast
 from transformers.generation.utils import GenerateOutput
 
-from ..llava_arch import LlavaMetaModel, LlavaMetaForCausalLM
+from ..llava_arch_imagebind import LlavaMetaModel, LlavaMetaForCausalLM
 
 
 class LlavaConfig(LlamaConfig):
@@ -68,6 +68,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         output_hidden_states: Optional[bool] = None,
         images: Optional[torch.FloatTensor] = None,
         image_sizes: Optional[List[List[int]]] = None,
+        depth_images: Optional[torch.FloatTensor] = None,
         return_dict: Optional[bool] = None,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
 
@@ -86,6 +87,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 past_key_values,
                 labels,
                 images,
+                depth_images,
                 image_sizes
             )
 
@@ -107,13 +109,13 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         self,
         inputs: Optional[torch.Tensor] = None,
         images: Optional[torch.Tensor] = None,
+        depth_images: Optional[torch.FloatTensor] = None,
         image_sizes: Optional[torch.Tensor] = None,
         **kwargs,
     ) -> Union[GenerateOutput, torch.LongTensor]:
         position_ids = kwargs.pop("position_ids", None)
         attention_mask = kwargs.pop("attention_mask", None)
         
-        # print("LlavaLlamaForCausalLM generate")
         # print("MRO:", [cls.__name__ for cls in LlavaLlamaForCausalLM.mro()])
         # print("kwargs", kwargs)
         if "inputs_embeds" in kwargs:
@@ -134,9 +136,9 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 None,
                 None,
                 images,
+                depth_images,
                 image_sizes=image_sizes
             )
-            # print('out of prepare_inputs_labels_for_multimodal')
             # print("inputs_embeds", inputs_embeds.shape)
             # print(inputs_embeds)
         else:
@@ -148,31 +150,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             inputs_embeds=inputs_embeds,
             **kwargs
         )
-####################################################################
-        # result_1 = super().forward(
-        #     position_ids=position_ids,
-        #     attention_mask=attention_mask,
-        #     inputs_embeds=inputs_embeds,
-        #     # **kwargs
-        # )
 
-        # print("result_1 logits", result_1["logits"][-1])  
-
-        # print("result_1", type(result_1))
-        # print("result_1", result_1.keys()) #(['logits', 'past_key_values'])
-        # print("result_1", result_1["logits"].shape) #torch.Size([1, 638, 32000])      
-        # print("result_1", len(result_1['past_key_values'])) # batchsize 32
-        # print("result_1", result_1['past_key_values'][-1][-1].shape) #([1, 32, 638, 128])
-        # print("result_1", result_1['past_key_values'])
-
-        # result = super().generate(
-        #         position_ids=position_ids,
-        #         attention_mask=attention_mask,
-        #         inputs_embeds=inputs_embeds,
-        #         **kwargs
-        #     )
-        # # print("LlamaForCausalLM generate() called")
-        # return result
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None,
                                       inputs_embeds=None, **kwargs):

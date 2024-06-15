@@ -14,6 +14,8 @@ import torch.nn.init as init
 
 from transformers.generation.utils import GenerateOutput
 from typing import List, Optional, Tuple, Union
+from datetime import datetime
+dt = datetime.now()
 
 class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     config_class = LlavaConfig
@@ -128,14 +130,9 @@ class DepthSupervisedDataset(LazySupervisedDataset):
         data_dict = super().__getitem__(i)
         if 'image' in self.list_data_dict[i] and isinstance(self.list_data_dict[i]['image'], str):
             image_file = Path(self.list_data_dict[i]['image']).name
-            image_folder = self.depth_path
+            depth_folder = self.depth_path
+            depth_image = Image.open(os.path.join(depth_folder, image_file)).convert('RGB')
             processor = self.data_args.image_processor
-
-            if image_file.startswith("http") or image_file.startswith("https"):
-                response = requests.get(image_file)
-                depth_image = Image.open(BytesIO(response.content)).convert('RGB')
-            else:
-                depth_image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
 
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
@@ -279,10 +276,10 @@ def train():
             if training_args.fp16:
                 model.to(torch.float16)
         rank0_print("Adding LoRA adapters...")
-        # model = get_peft_model(model, lora_config)
+        model = get_peft_model(model, lora_config)
 
     # I added 
-    model.lm_head.weight.requires_grad = False
+    # model.lm_head.weight.requires_grad = False
 
     # Tokenizer init
     if 'mpt' in model_args.model_name_or_path:
@@ -353,15 +350,15 @@ def train():
         if training_args.bits in [4, 8]:
             print('didnt expect to come here')
             model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
-            model.get_model().mm_projector2.to(dtype=compute_dtype, device=training_args.device)
+            # model.get_model().mm_projector2.to(dtype=compute_dtype, device=training_args.device)
 
-        for p in model.get_model().mm_projector2.parameters():
-            p.requires_grad = True
+        # for p in model.get_model().mm_projector2.parameters():
+        #     p.requires_grad = True
 
 
         from peft.tuners.lora import LoraLayer
         model_name = model.__class__.__name__
-        file = "/project/train_custom_late_all_requires_grad_only_proj2.txt"
+        file = f"/project/train_custom_late_all_requires_grad_{dt}.txt"
         with open(file, "w") as f:
             f.write(f"Model name: {model_name}\n")
             for name, param in model.named_parameters():
@@ -383,6 +380,15 @@ def train():
                         total_lora_params += param.numel()
             f.write(f"Trainable parameters in LoRA layers: {trainable_lora_params}\n")
             f.write(f"Total parameters in LoRA layers: {total_lora_params}\n")
+
+        file = f"/project/train_late_mm_proj_{dt}.txt"
+        with open(file, "w") as f:
+            for name, param in model.get_model().mm_projector.named_parameters():
+                f.write(f"Parameter: {name}\n")
+                f.write(f"{param}\n")
+                f.write("----------------------------------------------")
+                f.write("\n")
+
 
         model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
         model.config.mm_projector_lr = training_args.mm_projector_lr
@@ -439,6 +445,15 @@ def train():
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
+        
+        file = f"/project/train_late_mm_proj_{dt}.txt"
+        with open(file, "a") as f:
+            f.write("=====================after===============================")
+            for name, param in model.get_model().mm_projector.named_parameters():
+                f.write(f"Parameter: {name}\n")
+                f.write(f"{param}\n")
+                f.write("----------------------------------------------")
+                f.write("\n")
 
 
 if __name__ == "__main__":

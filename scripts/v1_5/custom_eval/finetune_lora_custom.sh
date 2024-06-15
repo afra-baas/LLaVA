@@ -36,19 +36,24 @@ mm_projector_lr=2e-5
 # dataset="VSR_random_class"
 
 
-method="no_depth"
+# method="no_depth"
 # method="conv"
 # method="conv_hyper_param_lr5_nwd"
 # method="late"
 # method="resnet"
 # method="resnet_fusion"
 # method="mlp"
-# method="method2" # dont forget to change init in model llava_llama
+# method="method2" # dont forget to change init in model llava_llama, i now import in train_custom
 # method=dino
 # method=dino_late
+method="imagebind"
+# method="fmask"
+
 
 # for method in 'late' ; do
-# for dataset in "VSR" "VSR_f" "VSR_random" "Whatsup" ; do
+# for dataset in "VSR_random" ; do
+# for dataset in "VSR" "VSR_f" "Whatsup" ; do
+# for dataset in "VSR_class4" ; do
 for dataset in "Whatsup" ; do
 
     if [ "$version" = "7b" ]; then
@@ -65,7 +70,7 @@ for dataset in "Whatsup" ; do
 
         # CKPT="VSR_TF_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_TF_plus_BCE_epoch${epochs}-${method}-${model}"
-        CKPT="VSR_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -74,7 +79,7 @@ for dataset in "Whatsup" ; do
         train_file="VSR_train_TF_f.json"
         val_file="VSR_val_TF_f.json"
 
-        CKPT="VSR_f_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_f_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -92,7 +97,7 @@ for dataset in "Whatsup" ; do
         train_file="VSR_random_train_TF.json"
         val_file="VSR_random_validation_TF.json"
 
-        CKPT="VSR_random_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_random_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -110,7 +115,7 @@ for dataset in "Whatsup" ; do
         train_file="VSR_random_train_classification4.json"
         val_file="VSR_random_validation_classification4.json"
 
-        CKPT="VSR_random_class4_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_random_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -124,7 +129,9 @@ for dataset in "Whatsup" ; do
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_frozen_llm"
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_train_only_conv"
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_only_proj2"
-        CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_no_finetuing"
+        CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
         # CKPT="VSR4_epoch${epochs}-${method}-${model}"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -176,7 +183,7 @@ for dataset in "Whatsup" ; do
         train_file="whatsup_train_classification_controlled_images.json"
         val_file="whatsup_val_classification_controlled_images.json"
 
-        CKPT="Whatsup_epoch${epochs}-${method}-${model}"
+        CKPT="Whatsup_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
         depth_train_file="/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/"
         depth_val_file="/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/"
@@ -236,6 +243,10 @@ for dataset in "Whatsup" ; do
         fusion_method="train_custom_dino.py"
     elif [ "$method" = "dino_late" ]; then
         fusion_method="train_custom_dino_late.py"
+    elif [ "$method" = "fmask" ]; then
+        fusion_method="train_custom_fmask.py"
+    elif [ "$method" = "imagebind" ]; then
+        fusion_method="train_custom_imagebind.py"
     else
         echo "Invalid method specified."
         # fusion_method="train_custom.py"
@@ -257,6 +268,10 @@ for dataset in "Whatsup" ; do
     #     --vit_lora_enable \
     #     --lora_alpha_vit 128 \
     #     --lora_r_vit 64 \
+    # --pretrain_mm_mlp_adapter ./checkpoints/llava-v1.5-7b-pretrain/mm_projector.bin \
+    # --pretrain_mm_mlp_adapter liuhaotian/llava-v1.5-mlp2x-336px-pretrain-vicuna-7b-v1.5/mm_projector.bin \
+    
+        # --pretrain_mm_mlp_adapter $model_base/mm_projector.bin \
 
     echo "Finetuning $model_base with $fusion_method on $train_file for $epochs epochs to become $CKPT"
 

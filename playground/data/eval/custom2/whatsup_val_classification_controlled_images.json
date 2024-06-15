@@ -6,7 +6,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A sunglasses to the right of a table\nB: A sunglasses on a table\nC: A sunglasses under a table\nD: A sunglasses to the left of a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A sunglasses to the right of a table\nB: A sunglasses on a table\nC: A sunglasses under a table\nD: A sunglasses to the left of a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -21,7 +21,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A lamp to the right of a chair\nB: A lamp on a chair\nC: A lamp to the left of a chair\nD: A lamp under a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A lamp to the right of a chair\nB: A lamp on a chair\nC: A lamp to the left of a chair\nD: A lamp under a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -36,7 +36,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl to the right of a knife\nB: A bowl in front of a knife\nC: A bowl to the left of a knife\nD: A bowl behind a knife\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl to the right of a knife\nB: A bowl in front of a knife\nC: A bowl to the left of a knife\nD: A bowl behind a knife\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -51,7 +51,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl to the left of a spoon\nB: A bowl to the right of a spoon\nC: A bowl behind a spoon\nD: A bowl in front of a spoon\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl to the left of a spoon\nB: A bowl to the right of a spoon\nC: A bowl behind a spoon\nD: A bowl in front of a spoon\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -66,7 +66,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A glasses on a armchair\nB: A glasses to the left of a armchair\nC: A glasses to the right of a armchair\nD: A glasses under a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A glasses on a armchair\nB: A glasses to the left of a armchair\nC: A glasses to the right of a armchair\nD: A glasses under a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -81,7 +81,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A can in front of a headphones\nB: A can to the left of a headphones\nC: A can behind a headphones\nD: A can to the right of a headphones\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A can in front of a headphones\nB: A can to the left of a headphones\nC: A can behind a headphones\nD: A can to the right of a headphones\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -96,7 +96,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A glove to the left of a armchair\nB: A glove on a armchair\nC: A glove to the right of a armchair\nD: A glove under a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A glove to the left of a armchair\nB: A glove on a armchair\nC: A glove to the right of a armchair\nD: A glove under a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -111,7 +111,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A remote to the right of a candle\nB: A remote to the left of a candle\nC: A remote in front of a candle\nD: A remote behind a candle\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A remote to the right of a candle\nB: A remote to the left of a candle\nC: A remote in front of a candle\nD: A remote behind a candle\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -126,7 +126,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A wineglass to the left of a armchair\nB: A wineglass to the right of a armchair\nC: A wineglass on a armchair\nD: A wineglass under a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A wineglass to the left of a armchair\nB: A wineglass to the right of a armchair\nC: A wineglass on a armchair\nD: A wineglass under a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -141,7 +141,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A book to the right of a flower\nB: A book behind a flower\nC: A book to the left of a flower\nD: A book in front of a flower\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A book to the right of a flower\nB: A book behind a flower\nC: A book to the left of a flower\nD: A book in front of a flower\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -156,7 +156,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A pillow on a armchair\nB: A pillow under a armchair\nC: A pillow to the left of a armchair\nD: A pillow to the right of a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A pillow on a armchair\nB: A pillow under a armchair\nC: A pillow to the left of a armchair\nD: A pillow to the right of a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -171,7 +171,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cup behind a fork\nB: A cup to the left of a fork\nC: A cup in front of a fork\nD: A cup to the right of a fork\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cup behind a fork\nB: A cup to the left of a fork\nC: A cup in front of a fork\nD: A cup to the right of a fork\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -186,7 +186,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate behind a book\nB: A plate in front of a book\nC: A plate to the right of a book\nD: A plate to the left of a book\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate behind a book\nB: A plate in front of a book\nC: A plate to the right of a book\nD: A plate to the left of a book\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -201,7 +201,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A mug to the right of a fork\nB: A mug to the left of a fork\nC: A mug behind a fork\nD: A mug in front of a fork\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A mug to the right of a fork\nB: A mug to the left of a fork\nC: A mug behind a fork\nD: A mug in front of a fork\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -216,7 +216,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl to the left of a armchair\nB: A bowl on a armchair\nC: A bowl under a armchair\nD: A bowl to the right of a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl to the left of a armchair\nB: A bowl on a armchair\nC: A bowl under a armchair\nD: A bowl to the right of a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -231,7 +231,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A wineglass to the left of a armchair\nB: A wineglass to the right of a armchair\nC: A wineglass on a armchair\nD: A wineglass under a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A wineglass to the left of a armchair\nB: A wineglass to the right of a armchair\nC: A wineglass on a armchair\nD: A wineglass under a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -246,7 +246,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate behind a candle\nB: A plate to the left of a candle\nC: A plate in front of a candle\nD: A plate to the right of a candle\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate behind a candle\nB: A plate to the left of a candle\nC: A plate in front of a candle\nD: A plate to the right of a candle\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -261,7 +261,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cap under a chair\nB: A cap to the left of a chair\nC: A cap on a chair\nD: A cap to the right of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cap under a chair\nB: A cap to the left of a chair\nC: A cap on a chair\nD: A cap to the right of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -276,7 +276,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A can to the right of a flower\nB: A can behind a flower\nC: A can to the left of a flower\nD: A can in front of a flower\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A can to the right of a flower\nB: A can behind a flower\nC: A can to the left of a flower\nD: A can in front of a flower\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -291,7 +291,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A glass to the right of a armchair\nB: A glass on a armchair\nC: A glass under a armchair\nD: A glass to the left of a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A glass to the right of a armchair\nB: A glass on a armchair\nC: A glass under a armchair\nD: A glass to the left of a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -306,7 +306,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bottle of mustard to the left of a chair\nB: A bottle of mustard under a chair\nC: A bottle of mustard to the right of a chair\nD: A bottle of mustard on a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bottle of mustard to the left of a chair\nB: A bottle of mustard under a chair\nC: A bottle of mustard to the right of a chair\nD: A bottle of mustard on a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -321,7 +321,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A kettle to the left of a chair\nB: A kettle under a chair\nC: A kettle on a chair\nD: A kettle to the right of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A kettle to the left of a chair\nB: A kettle under a chair\nC: A kettle on a chair\nD: A kettle to the right of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -336,7 +336,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cup behind a can\nB: A cup in front of a can\nC: A cup to the right of a can\nD: A cup to the left of a can\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cup behind a can\nB: A cup in front of a can\nC: A cup to the right of a can\nD: A cup to the left of a can\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -351,7 +351,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cup to the right of a table\nB: A cup to the left of a table\nC: A cup on a table\nD: A cup under a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cup to the right of a table\nB: A cup to the left of a table\nC: A cup on a table\nD: A cup under a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -366,7 +366,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A dog to the right of a table\nB: A dog under a table\nC: A dog on a table\nD: A dog to the left of a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A dog to the right of a table\nB: A dog under a table\nC: A dog on a table\nD: A dog to the left of a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -381,7 +381,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A box to the left of a chair\nB: A box on a chair\nC: A box under a chair\nD: A box to the right of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A box to the left of a chair\nB: A box on a chair\nC: A box under a chair\nD: A box to the right of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -396,7 +396,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate to the right of a can\nB: A plate in front of a can\nC: A plate behind a can\nD: A plate to the left of a can\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate to the right of a can\nB: A plate in front of a can\nC: A plate behind a can\nD: A plate to the left of a can\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -411,7 +411,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl to the right of a headphones\nB: A bowl to the left of a headphones\nC: A bowl behind a headphones\nD: A bowl in front of a headphones\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl to the right of a headphones\nB: A bowl to the left of a headphones\nC: A bowl behind a headphones\nD: A bowl in front of a headphones\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -426,7 +426,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cup behind a knife\nB: A cup in front of a knife\nC: A cup to the left of a knife\nD: A cup to the right of a knife\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cup behind a knife\nB: A cup in front of a knife\nC: A cup to the left of a knife\nD: A cup to the right of a knife\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -441,7 +441,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A can behind a remote\nB: A can to the left of a remote\nC: A can to the right of a remote\nD: A can in front of a remote\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A can behind a remote\nB: A can to the left of a remote\nC: A can to the right of a remote\nD: A can in front of a remote\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -456,7 +456,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A sunglasses to the right of a tape\nB: A sunglasses behind a tape\nC: A sunglasses in front of a tape\nD: A sunglasses to the left of a tape\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A sunglasses to the right of a tape\nB: A sunglasses behind a tape\nC: A sunglasses in front of a tape\nD: A sunglasses to the left of a tape\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -471,7 +471,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cap to the left of a remote\nB: A cap behind a remote\nC: A cap to the right of a remote\nD: A cap in front of a remote\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cap to the left of a remote\nB: A cap behind a remote\nC: A cap to the right of a remote\nD: A cap in front of a remote\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -486,7 +486,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plant on a table\nB: A plant under a table\nC: A plant to the left of a table\nD: A plant to the right of a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plant on a table\nB: A plant under a table\nC: A plant to the left of a table\nD: A plant to the right of a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -501,7 +501,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A scissors under a table\nB: A scissors on a table\nC: A scissors to the left of a table\nD: A scissors to the right of a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A scissors under a table\nB: A scissors on a table\nC: A scissors to the left of a table\nD: A scissors to the right of a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -516,7 +516,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate to the right of a headphones\nB: A plate to the left of a headphones\nC: A plate behind a headphones\nD: A plate in front of a headphones\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate to the right of a headphones\nB: A plate to the left of a headphones\nC: A plate behind a headphones\nD: A plate in front of a headphones\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -531,7 +531,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A book behind a fork\nB: A book to the left of a fork\nC: A book in front of a fork\nD: A book to the right of a fork\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A book behind a fork\nB: A book to the left of a fork\nC: A book in front of a fork\nD: A book to the right of a fork\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -546,7 +546,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A pan to the right of a chair\nB: A pan on a chair\nC: A pan under a chair\nD: A pan to the left of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A pan to the right of a chair\nB: A pan on a chair\nC: A pan under a chair\nD: A pan to the left of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -561,7 +561,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cap on a chair\nB: A cap to the left of a chair\nC: A cap under a chair\nD: A cap to the right of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cap on a chair\nB: A cap to the left of a chair\nC: A cap under a chair\nD: A cap to the right of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -576,7 +576,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A photograph on a chair\nB: A photograph to the left of a chair\nC: A photograph to the right of a chair\nD: A photograph under a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A photograph on a chair\nB: A photograph to the left of a chair\nC: A photograph to the right of a chair\nD: A photograph under a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -591,7 +591,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A microphone to the right of a chair\nB: A microphone to the left of a chair\nC: A microphone under a chair\nD: A microphone on a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A microphone to the right of a chair\nB: A microphone to the left of a chair\nC: A microphone under a chair\nD: A microphone on a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -606,7 +606,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A yarn to the left of a armchair\nB: A yarn to the right of a armchair\nC: A yarn under a armchair\nD: A yarn on a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A yarn to the left of a armchair\nB: A yarn to the right of a armchair\nC: A yarn under a armchair\nD: A yarn on a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -621,7 +621,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A can behind a spoon\nB: A can in front of a spoon\nC: A can to the left of a spoon\nD: A can to the right of a spoon\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A can behind a spoon\nB: A can in front of a spoon\nC: A can to the left of a spoon\nD: A can to the right of a spoon\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -636,7 +636,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A mug behind a scissors\nB: A mug to the left of a scissors\nC: A mug in front of a scissors\nD: A mug to the right of a scissors\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A mug behind a scissors\nB: A mug to the left of a scissors\nC: A mug in front of a scissors\nD: A mug to the right of a scissors\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -651,7 +651,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate behind a scissors\nB: A plate in front of a scissors\nC: A plate to the left of a scissors\nD: A plate to the right of a scissors\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate behind a scissors\nB: A plate in front of a scissors\nC: A plate to the left of a scissors\nD: A plate to the right of a scissors\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -666,7 +666,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A book under a chair\nB: A book to the right of a chair\nC: A book on a chair\nD: A book to the left of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A book under a chair\nB: A book to the right of a chair\nC: A book on a chair\nD: A book to the left of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -681,7 +681,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate in front of a tape\nB: A plate behind a tape\nC: A plate to the left of a tape\nD: A plate to the right of a tape\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate in front of a tape\nB: A plate behind a tape\nC: A plate to the left of a tape\nD: A plate to the right of a tape\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -696,7 +696,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A hat on a chair\nB: A hat to the left of a chair\nC: A hat to the right of a chair\nD: A hat under a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A hat on a chair\nB: A hat to the left of a chair\nC: A hat to the right of a chair\nD: A hat under a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -711,7 +711,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A book in front of a cup\nB: A book to the left of a cup\nC: A book behind a cup\nD: A book to the right of a cup\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A book in front of a cup\nB: A book to the left of a cup\nC: A book behind a cup\nD: A book to the right of a cup\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -726,7 +726,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A ball of yarn under a table\nB: A ball of yarn to the right of a table\nC: A ball of yarn on a table\nD: A ball of yarn to the left of a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A ball of yarn under a table\nB: A ball of yarn to the right of a table\nC: A ball of yarn on a table\nD: A ball of yarn to the left of a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -741,7 +741,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A remote in front of a sunglasses\nB: A remote to the left of a sunglasses\nC: A remote behind a sunglasses\nD: A remote to the right of a sunglasses\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A remote in front of a sunglasses\nB: A remote to the left of a sunglasses\nC: A remote behind a sunglasses\nD: A remote to the right of a sunglasses\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -756,7 +756,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A remote on a chair\nB: A remote under a chair\nC: A remote to the left of a chair\nD: A remote to the right of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A remote on a chair\nB: A remote under a chair\nC: A remote to the left of a chair\nD: A remote to the right of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -771,7 +771,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A headphones on a chair\nB: A headphones to the right of a chair\nC: A headphones to the left of a chair\nD: A headphones under a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A headphones on a chair\nB: A headphones to the right of a chair\nC: A headphones to the left of a chair\nD: A headphones under a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -786,7 +786,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A book to the right of a candle\nB: A book to the left of a candle\nC: A book behind a candle\nD: A book in front of a candle\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A book to the right of a candle\nB: A book to the left of a candle\nC: A book behind a candle\nD: A book in front of a candle\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -801,7 +801,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A remote in front of a spoon\nB: A remote to the left of a spoon\nC: A remote behind a spoon\nD: A remote to the right of a spoon\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A remote in front of a spoon\nB: A remote to the left of a spoon\nC: A remote behind a spoon\nD: A remote to the right of a spoon\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -816,7 +816,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A pillow to the right of a chair\nB: A pillow on a chair\nC: A pillow under a chair\nD: A pillow to the left of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A pillow to the right of a chair\nB: A pillow on a chair\nC: A pillow under a chair\nD: A pillow to the left of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -831,7 +831,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bottle of orange juice on a chair\nB: A bottle of orange juice under a chair\nC: A bottle of orange juice to the right of a chair\nD: A bottle of orange juice to the left of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bottle of orange juice on a chair\nB: A bottle of orange juice under a chair\nC: A bottle of orange juice to the right of a chair\nD: A bottle of orange juice to the left of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -846,7 +846,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate to the left of a sunglasses\nB: A plate to the right of a sunglasses\nC: A plate behind a sunglasses\nD: A plate in front of a sunglasses\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate to the left of a sunglasses\nB: A plate to the right of a sunglasses\nC: A plate behind a sunglasses\nD: A plate in front of a sunglasses\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -861,7 +861,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A remote to the left of a candle\nB: A remote behind a candle\nC: A remote to the right of a candle\nD: A remote in front of a candle\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A remote to the left of a candle\nB: A remote behind a candle\nC: A remote to the right of a candle\nD: A remote in front of a candle\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -876,7 +876,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate on a armchair\nB: A plate to the left of a armchair\nC: A plate to the right of a armchair\nD: A plate under a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate on a armchair\nB: A plate to the left of a armchair\nC: A plate to the right of a armchair\nD: A plate under a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -891,7 +891,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl to the left of a can\nB: A bowl to the right of a can\nC: A bowl in front of a can\nD: A bowl behind a can\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl to the left of a can\nB: A bowl to the right of a can\nC: A bowl in front of a can\nD: A bowl behind a can\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -906,7 +906,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cup in front of a flower\nB: A cup to the right of a flower\nC: A cup to the left of a flower\nD: A cup behind a flower\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cup in front of a flower\nB: A cup to the right of a flower\nC: A cup to the left of a flower\nD: A cup behind a flower\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -921,7 +921,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl to the right of a candle\nB: A bowl in front of a candle\nC: A bowl to the left of a candle\nD: A bowl behind a candle\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl to the right of a candle\nB: A bowl in front of a candle\nC: A bowl to the left of a candle\nD: A bowl behind a candle\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -936,7 +936,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl in front of a can\nB: A bowl to the right of a can\nC: A bowl behind a can\nD: A bowl to the left of a can\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl in front of a can\nB: A bowl to the right of a can\nC: A bowl behind a can\nD: A bowl to the left of a can\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -951,7 +951,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A mug in front of a flower\nB: A mug behind a flower\nC: A mug to the right of a flower\nD: A mug to the left of a flower\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A mug in front of a flower\nB: A mug behind a flower\nC: A mug to the right of a flower\nD: A mug to the left of a flower\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -966,7 +966,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate on a chair\nB: A plate to the left of a chair\nC: A plate to the right of a chair\nD: A plate under a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate on a chair\nB: A plate to the left of a chair\nC: A plate to the right of a chair\nD: A plate under a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -981,7 +981,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A mug to the left of a fork\nB: A mug to the right of a fork\nC: A mug behind a fork\nD: A mug in front of a fork\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A mug to the left of a fork\nB: A mug to the right of a fork\nC: A mug behind a fork\nD: A mug in front of a fork\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -996,7 +996,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate to the right of a sunglasses\nB: A plate in front of a sunglasses\nC: A plate behind a sunglasses\nD: A plate to the left of a sunglasses\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate to the right of a sunglasses\nB: A plate in front of a sunglasses\nC: A plate behind a sunglasses\nD: A plate to the left of a sunglasses\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1011,7 +1011,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A oven mitt under a chair\nB: A oven mitt on a chair\nC: A oven mitt to the right of a chair\nD: A oven mitt to the left of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A oven mitt under a chair\nB: A oven mitt on a chair\nC: A oven mitt to the right of a chair\nD: A oven mitt to the left of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1026,7 +1026,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A toilet roll under a chair\nB: A toilet roll to the right of a chair\nC: A toilet roll on a chair\nD: A toilet roll to the left of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A toilet roll under a chair\nB: A toilet roll to the right of a chair\nC: A toilet roll on a chair\nD: A toilet roll to the left of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1041,7 +1041,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl to the left of a chair\nB: A bowl under a chair\nC: A bowl to the right of a chair\nD: A bowl on a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl to the left of a chair\nB: A bowl under a chair\nC: A bowl to the right of a chair\nD: A bowl on a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1056,7 +1056,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cup behind a fork\nB: A cup to the right of a fork\nC: A cup to the left of a fork\nD: A cup in front of a fork\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cup behind a fork\nB: A cup to the right of a fork\nC: A cup to the left of a fork\nD: A cup in front of a fork\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1071,7 +1071,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A toy cactus to the right of a chair\nB: A toy cactus on a chair\nC: A toy cactus under a chair\nD: A toy cactus to the left of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A toy cactus to the right of a chair\nB: A toy cactus on a chair\nC: A toy cactus under a chair\nD: A toy cactus to the left of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1086,7 +1086,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A plate on a armchair\nB: A plate to the left of a armchair\nC: A plate to the right of a armchair\nD: A plate under a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A plate on a armchair\nB: A plate to the left of a armchair\nC: A plate to the right of a armchair\nD: A plate under a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1101,7 +1101,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cup to the left of a table\nB: A cup to the right of a table\nC: A cup under a table\nD: A cup on a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cup to the left of a table\nB: A cup to the right of a table\nC: A cup under a table\nD: A cup on a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1116,7 +1116,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A beer bottle to the right of a armchair\nB: A beer bottle under a armchair\nC: A beer bottle to the left of a armchair\nD: A beer bottle on a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A beer bottle to the right of a armchair\nB: A beer bottle under a armchair\nC: A beer bottle to the left of a armchair\nD: A beer bottle on a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1131,7 +1131,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A bowl to the right of a spoon\nB: A bowl in front of a spoon\nC: A bowl behind a spoon\nD: A bowl to the left of a spoon\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A bowl to the right of a spoon\nB: A bowl in front of a spoon\nC: A bowl behind a spoon\nD: A bowl to the left of a spoon\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1146,7 +1146,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A mug to the left of a plate\nB: A mug behind a plate\nC: A mug to the right of a plate\nD: A mug in front of a plate\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A mug to the left of a plate\nB: A mug behind a plate\nC: A mug to the right of a plate\nD: A mug in front of a plate\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1161,7 +1161,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A knife under a table\nB: A knife on a table\nC: A knife to the right of a table\nD: A knife to the left of a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A knife under a table\nB: A knife on a table\nC: A knife to the right of a table\nD: A knife to the left of a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1176,7 +1176,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A cup to the right of a tape\nB: A cup in front of a tape\nC: A cup to the left of a tape\nD: A cup behind a tape\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A cup to the right of a tape\nB: A cup in front of a tape\nC: A cup to the left of a tape\nD: A cup behind a tape\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1191,7 +1191,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A knife under a table\nB: A knife to the right of a table\nC: A knife on a table\nD: A knife to the left of a table\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A knife under a table\nB: A knife to the right of a table\nC: A knife on a table\nD: A knife to the left of a table\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1206,7 +1206,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A scarf to the right of a chair\nB: A scarf on a chair\nC: A scarf under a chair\nD: A scarf to the left of a chair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A scarf to the right of a chair\nB: A scarf on a chair\nC: A scarf under a chair\nD: A scarf to the left of a chair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",
@@ -1221,7 +1221,7 @@
     "conversations": [
       {
         "from": "human",
-        "value": "Identify the correct relation between the objects mentioned, given the image:\nA: A pillow to the left of a armchair\nB: A pillow on a armchair\nC: A pillow to the right of a armchair\nD: A pillow under a armchair\nChoose the most suitable option.\n"
+        "value": "<image>\nWhat is the spatial relationship between the objects in the image?\nA: A pillow to the left of a armchair\nB: A pillow on a armchair\nC: A pillow to the right of a armchair\nD: A pillow under a armchair\nChoose the most suitable option.\nAnswer with the option's letter from the given choices directly."
       },
       {
         "from": "gpt",

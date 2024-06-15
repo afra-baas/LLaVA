@@ -33,13 +33,14 @@ from llava.train.llava_trainer import LLaVATrainer
 
 from llava import conversation as conversation_lib
 # from llava.model import *
-from llava.model.language_model.llava_llama_late import LlavaLlamaForCausalLM, LlavaConfig
+from llava.model.language_model.llava_llama_imagebind import LlavaLlamaForCausalLM, LlavaConfig
 
 from llava.mm_utils import tokenizer_image_token
 
 from PIL import Image
 import requests
 from io import BytesIO
+from datetime import datetime
 
 local_rank = None
 
@@ -71,7 +72,7 @@ class ModelArguments:
     pretrain_mm_mlp_adapter: Optional[str] = field(default=None)
     mm_projector_type: Optional[str] = field(default='linear')
     mm_use_im_start_end: bool = field(default=False)
-    mm_use_im_patch_token: bool = field(default=True)
+    mm_use_im_patch_token: bool = field(default=False)
     mm_patch_merge_type: Optional[str] = field(default='flat')
     mm_vision_select_feature: Optional[str] = field(default="patch")
 
@@ -207,6 +208,7 @@ def safe_save_model_for_hf_trainer(trainer: transformers.Trainer,
     """Collects the state dict and dump to disk."""
 
     if getattr(trainer.args, "tune_mm_mlp_adapter", False):
+        print('getattr(trainer.args, "tune_mm_mlp_adapter", False)')
         # Only save Adapter
         keys_to_match = ['mm_projector']
         if getattr(trainer.args, "use_im_start_end", False):
@@ -446,14 +448,14 @@ def preprocess_v1(
             # Skip the first one if it is not from human
             print('skip the first one if it is not from human')
             source = source[1:]
-
+        
         conv.messages = []
         for j, sentence in enumerate(source):
             role = roles[sentence["from"]]
             assert role == conv.roles[j % 2], f"{i}"
             conv.append_message(role, sentence["value"])
         conversations.append(conv.get_prompt())
-
+        
     # Tokenize conversations
     if has_image:
         # print('prompt ', conversations[0])
@@ -653,7 +655,7 @@ def preprocess(
         print("preprocess_mpt")
         return preprocess_mpt(sources, tokenizer, has_image=has_image)
     
-    print('çomesss here')
+    print('-----comesss here---')
     # add end signal and concatenate together
     conversations = []
     for source in sources:
@@ -725,7 +727,9 @@ class LazySupervisedDataset(Dataset):
             image_file = self.list_data_dict[i]['image']
             processor = self.data_args.image_processor
 
+            # print('image_file: ', image_file)
             if image_file.startswith("http") or image_file.startswith("https"):
+                print("Removee download from internet")
                 image_folder = self.data_args.image_folder
                 image_name = self.list_data_dict[i]['id']
                 image_path= os.path.join(image_folder, image_name)
@@ -733,7 +737,9 @@ class LazySupervisedDataset(Dataset):
                     print('os.path.exists(image_path) == False')
             else:
                 image_path= image_file
+            # print("image_path: ", image_path)
             image = Image.open(image_path).convert('RGB')
+
 
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
@@ -825,10 +831,3 @@ def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
     return dict(train_dataset=train_dataset,
                 eval_dataset=eval_dataset,
                 data_collator=data_collator)
-
-
-
-# if __name__ == "__main__":
-#     train()
-    # from train_mem.py
-    # train(attn_implementation="flash_attention_2")

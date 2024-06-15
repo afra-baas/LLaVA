@@ -40,7 +40,7 @@ from llava.mm_utils import tokenizer_image_token
 from PIL import Image
 import requests
 from io import BytesIO
-import time
+from datetime import datetime
 
 local_rank = None
 
@@ -455,19 +455,6 @@ def preprocess_v1(
             assert role == conv.roles[j % 2], f"{i}"
             conv.append_message(role, sentence["value"])
         conversations.append(conv.get_prompt())
-
-        # conv.messages = []
-        # for j, sentence in enumerate(source):   
-        #     role = roles[sentence["from"]]
-        #     assert role == conv.roles[j % 2], f"{i}"
-        #     # i added <image> to prompt 
-        #     if role == conv.roles[0]:
-        #         qs=sentence["value"]
-        #         qs = DEFAULT_IMAGE_TOKEN + '\n' + qs
-        #         conv.append_message(role, qs)
-        #     else:
-        #         conv.append_message(role, sentence["value"])
-        # conversations.append(conv.get_prompt())
         
     # Tokenize conversations
     if has_image:
@@ -999,11 +986,13 @@ def train(attn_implementation=None):
         if training_args.bits in [4, 8]:
             model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
 
+        dt = datetime.now()
+        # print("Date and time is:", dt)
 
         # check if projection is being trained -> base_model.model.model.mm_projector -> all weights and bias are true
         from peft.tuners.lora import LoraLayer
         model_name = model.__class__.__name__
-        file = "/project/train_nodepth.txt"
+        file = f"/project/model_states/train_nodepth_{dt}.txt"
         with open(file, "w") as f:
             f.write(f"Model name: {model_name}\n")
             for name, param in model.named_parameters():
@@ -1026,11 +1015,10 @@ def train(attn_implementation=None):
             f.write(f"Trainable parameters in LoRA layers: {trainable_lora_params}\n")
             f.write(f"Total parameters in LoRA layers: {total_lora_params}\n")
 
-        file = "/project/train_nodepth_mm_proj.txt"
+        file = f"/project/model_states/train_nodepth_mm_proj_{dt}.txt"
         with open(file, "w") as f:
             for name, param in model.get_model().mm_projector.named_parameters():
                 f.write(f"Parameter: {name}\n")
-                # if param.requires_grad:
                 f.write(f"{param}\n")
                 f.write("----------------------------------------------")
                 f.write("\n")
@@ -1088,13 +1076,14 @@ def train(attn_implementation=None):
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
         
-    file = "/project/train_nodepth_mm_proj.txt"
+    file = f"/project/model_states/train_nodepth_mm_proj_{dt}.txt"
     with open(file, "a") as f:
+        f.write("=====================after===============================")
         for name, param in model.get_model().mm_projector.named_parameters():
             f.write(f"Parameter: {name}\n")
-            # if param.requires_grad:
             f.write(f"{param}\n")
             f.write("----------------------------------------------")
+            f.write("\n")
 
 
 if __name__ == "__main__":

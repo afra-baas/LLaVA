@@ -14,6 +14,8 @@ import torch.nn.init as init
 
 from transformers.generation.utils import GenerateOutput
 from typing import List, Optional, Tuple, Union
+from datetime import datetime
+dt = datetime.now()
 
 class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     config_class = LlavaConfig
@@ -22,7 +24,6 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     def __init__(self, config):
         super(DepthLlavaLlamaForCausalLM, self).__init__(config)
         self.conv1x1 = nn.Conv2d(4, 3, kernel_size=1)#.half()
-        # self.conv1x1.requires_grad_(True)
         # self.conv1x1 = self.conv1x1.to(self.device)
         self.conv_weights_path = 'conv1x1_weights.pth'
         print('state_dict conv init', self.conv1x1.state_dict()) 
@@ -33,7 +34,7 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
         nn.init.xavier_uniform_(self.conv1x1.weight, gain=nn.init.calculate_gain('relu'))
         nn.init.zeros_(self.conv1x1.bias)
         print('state_dict conv initialize_weights', self.conv1x1.state_dict()) 
-        file = "/project/train_custom_conv_state_dict.txt"
+        file = f"/project/train_custom_conv_state_dict_{dt}.txt"
         with open(file, "w") as f:
             f.write(f'state_dict conv after init weights: \n{self.conv1x1.state_dict()}')
 
@@ -113,7 +114,7 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
             images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336]) -> torch.Size([16, 3, 336, 336])
             # images = torch.cat((images, depth_images), dim=-1)  # dim 1 or -1? #torch.Size([16, 3, 336, 672])
             # print("image and depth map concatenated before encoder in generate")
-
+            
         return super().generate(
             inputs,
             images,
@@ -276,14 +277,6 @@ def train():
         model.model.requires_grad_(False)
 
     # so llm is frozen but then later lora unfreezes it 
-    # model_name = model.__class__.__name__
-    # file = "/project/train_custom_conv_all_requires_grad_should_be_only_conv_test.txt"
-    # with open(file, "w") as f:
-    #     f.write(f"Model name: {model_name}\n")
-    #     for name, param in model.named_parameters():
-    #         # if param.requires_grad:
-    #         f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
-
     if training_args.bits in [4, 8]:
         from peft import prepare_model_for_kbit_training
         model.config.torch_dtype=(torch.float32 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
@@ -296,14 +289,6 @@ def train():
             def make_inputs_require_grad(module, input, output):
                 output.requires_grad_(True)
             model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
-
-    # model_name = model.__class__.__name__
-    # file = "/project/train_custom_conv_all_requires_grad_should_be_only_conv_test.txt"
-    # with open(file, "w") as f:
-    #     f.write(f"Model name: {model_name}\n")
-    #     for name, param in model.named_parameters():
-    #         # if param.requires_grad:
-    #         f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
 
     if training_args.lora_enable:
         from peft import LoraConfig, get_peft_model
@@ -321,19 +306,11 @@ def train():
             if training_args.fp16:
                 model.to(torch.float16)
         rank0_print("Adding LoRA adapters...")
-        # model = get_peft_model(model, lora_config)
+        model = get_peft_model(model, lora_config)
 
-    # I added 
-    model.lm_head.weight.requires_grad = False
+    # I added for when you want to freeze everything
+    # model.lm_head.weight.requires_grad = False
     # print(model.lm_head.weight)
-
-    # model_name = model.__class__.__name__
-    # file = "/project/train_custom_conv_all_requires_grad_should_be_only_conv_test2.txt"
-    # with open(file, "w") as f:
-    #     f.write(f"Model name: {model_name}\n")
-    #     for name, param in model.named_parameters():
-    #         # if param.requires_grad:
-    #         f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
 
     # Tokenizer init
     if 'mpt' in model_args.model_name_or_path:
@@ -403,7 +380,7 @@ def train():
 
         from peft.tuners.lora import LoraLayer
         model_name = model.__class__.__name__
-        file = "/project/train_custom_conv_all_requires_grad_should_be_only_conv.txt"
+        file = f"/project/train_custom_conv_all_requires_grad_{dt}.txt"
         with open(file, "w") as f:
             f.write(f"Model name: {model_name}\n")
             for name, param in model.named_parameters():
@@ -425,6 +402,14 @@ def train():
                         total_lora_params += param.numel()
             f.write(f"Trainable parameters in LoRA layers: {trainable_lora_params}\n")
             f.write(f"Total parameters in LoRA layers: {total_lora_params}\n")
+
+        file = f"/project/train_conv_mm_proj_{dt}.txt"
+        with open(file, "w") as f:
+            for name, param in model.get_model().mm_projector.named_parameters():
+                f.write(f"Parameter: {name}\n")
+                f.write(f"{param}\n")
+                f.write("----------------------------------------------")
+                f.write("\n")
 
 
         model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
@@ -497,9 +482,19 @@ def train():
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
 
-    file = "/project/train_custom_conv_state_dict.txt"
+    file = f"/project/train_custom_conv_state_dict_{dt}.txt"
     with open(file, "a") as f:
+        f.write('====================after=======================')
         f.write(f'state_dict conv before save: \n{conv1x1_state_dict}')
+
+    file = f"/project/train_conv_mm_proj_{dt}.txt"
+    with open(file, "a") as f:
+        f.write("=====================after===============================")
+        for name, param in model.get_model().mm_projector.named_parameters():
+            f.write(f"Parameter: {name}\n")
+            f.write(f"{param}\n")
+            f.write("----------------------------------------------")
+            f.write("\n")
 
 
 if __name__ == "__main__":

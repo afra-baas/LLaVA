@@ -17,7 +17,8 @@ from io import BytesIO
 
 from transformers.generation.utils import GenerateOutput
 from typing import List, Optional, Tuple, Union
-
+from datetime import datetime
+dt = datetime.now()
 
 
 class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
@@ -133,7 +134,7 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
         if "inputs_embeds" in kwargs:
             raise NotImplementedError("`inputs_embeds` is not supported")
         
-        print("DepthLlavaLlamaForCausalLM generate method2 ")
+        # print("DepthLlavaLlamaForCausalLM generate method2 ")
         # print("MRO:", [cls.__name__ for cls in DepthLlavaLlamaForCausalLM.mro()])
         
         return super().generate(
@@ -149,7 +150,7 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
         return super().encode_images(images, depth_images=depth_images)
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):
-        print("prepare_inputs_for_generation")
+        # print("prepare_inputs_for_generation")
         images = kwargs.pop("images", None)
         depth_images = kwargs.pop("depth_images", None)
         _inputs = super().prepare_inputs_for_generation(
@@ -398,6 +399,39 @@ def train():
         if training_args.bits in [4, 8]:
             model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
 
+        from peft.tuners.lora import LoraLayer
+        model_name = model.__class__.__name__
+        file = f"/project/train_custom_fmask_all_requires_grad_{dt}.txt"
+        with open(file, "w") as f:
+            f.write(f"Model name: {model_name}\n")
+            for name, param in model.named_parameters():
+                # if param.requires_grad:
+                f.write(f"Parameter name: {name}, requires_grad: {param.requires_grad}\n")
+            trainable_params = sum(
+                p.numel() for p in model.parameters() if p.requires_grad)
+            f.write(f"Trainable parameters: {trainable_params}\n")
+            total_params = sum(p.numel() for p in model.parameters())
+            f.write(f"Total parameters: {total_params}\n")
+
+            trainable_lora_params=0
+            total_lora_params=0
+            for name, module in model.named_modules():
+                if isinstance(module, LoraLayer):
+                    for param_name, param in module.named_parameters():
+                        if param.requires_grad:
+                            trainable_lora_params += param.numel()
+                        total_lora_params += param.numel()
+            f.write(f"Trainable parameters in LoRA layers: {trainable_lora_params}\n")
+            f.write(f"Total parameters in LoRA layers: {total_lora_params}\n")
+
+        file = f"/project/train_fmask_mm_proj_{dt}.txt"
+        with open(file, "w") as f:
+            for name, param in model.get_model().mm_projector.named_parameters():
+                f.write(f"Parameter: {name}\n")
+                f.write(f"{param}\n")
+                f.write("----------------------------------------------")
+                f.write("\n")
+
         model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
         model.config.mm_projector_lr = training_args.mm_projector_lr
         training_args.use_im_start_end = model_args.mm_use_im_start_end
@@ -490,6 +524,16 @@ def train():
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
+        
+
+    file = f"/project/train_fmask_mm_proj_{dt}.txt"
+    with open(file, "a") as f:
+        f.write("=====================after===============================")
+        for name, param in model.get_model().mm_projector.named_parameters():
+            f.write(f"Parameter: {name}\n")
+            f.write(f"{param}\n")
+            f.write("----------------------------------------------")
+            f.write("\n")
 
 
 if __name__ == "__main__":

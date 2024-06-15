@@ -20,6 +20,7 @@ dataset="VSR_class4"
 # dataset="Whatsup"
 
 method="zeroshot"
+# method="zeroshot_imagebind"
 TF=False
 
 if [ "$version" = "7b" ]; then
@@ -70,7 +71,7 @@ elif [ "$dataset" = "VSR_random_class" ]; then
 elif [ "$dataset" = "VSR_class4" ]; then
     CKPT="VSR4_${method}-${model}"
 
-    depth_path="vsr" 
+    depth_path="/project/msc-thesis-project/all_vsr_depth" 
     root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR4"
     test_file="VSR_test_classification4.json"
 
@@ -109,6 +110,7 @@ elif [ "$dataset" = "Spatialvlm" ]; then
 fi
 
 eval_file="llava.eval.model_vqa_science" 
+# eval_file="llava.eval.model_vqa_science_imagebind" 
 
 echo "Evaluating $CKPT on $test_file with $eval_file with $TF"
 

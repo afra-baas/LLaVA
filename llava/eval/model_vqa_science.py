@@ -47,12 +47,6 @@ def eval_model(args):
 
         if 'image' in line:
             image_file = line["image"]
-            
-            # if image_file.startswith("http") or image_file.startswith("https"):
-            #     response =requests.get(image_file, stream=True)
-            #     image = Image.open(response.raw).convert('RGB')
-            # else:
-            # .convert('RGB') is added by me!
             image = Image.open(os.path.join(args.image_folder, image_file)).convert('RGB')
 
             image_tensor = process_images([image], image_processor, model.config)[0]

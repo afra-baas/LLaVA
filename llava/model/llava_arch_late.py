@@ -32,7 +32,7 @@ class LlavaMetaModel:
         if hasattr(config, "mm_vision_tower"):
             self.vision_tower = build_vision_tower(config, delay_load=True)
             self.mm_projector = build_vision_projector(config)
-            self.mm_projector2 = build_vision_projector(config)
+            # self.mm_projector2 = build_vision_projector(config)
 
 
     def get_vision_tower(self):
@@ -74,15 +74,15 @@ class LlavaMetaModel:
         else:
             # In case it is frozen by LoRA
             for p in self.mm_projector.parameters():
-                # p.requires_grad = True
-                p.requires_grad = False
+                p.requires_grad = True
+                # p.requires_grad = False
         
-        if getattr(self, 'mm_projector2', None) is None:
-            self.mm_projector2 = build_vision_projector(self.config)
-        else:
-            for p in self.mm_projector2.parameters():
-                # p.requires_grad = True
-                p.requires_grad = False
+        # if getattr(self, 'mm_projector2', None) is None:
+        #     self.mm_projector2 = build_vision_projector(self.config)
+        # else:
+        #     for p in self.mm_projector2.parameters():
+        #         p.requires_grad = True
+        #         # p.requires_grad = False
 
         if pretrain_mm_mlp_adapter is not None:
             mm_projector_weights = torch.load(pretrain_mm_mlp_adapter, map_location='cpu')
@@ -90,7 +90,7 @@ class LlavaMetaModel:
                 return {k.split(keyword + '.')[1]: v for k, v in weights.items() if keyword in k}
 
             self.mm_projector.load_state_dict(get_w(mm_projector_weights, 'mm_projector'))
-            self.mm_projector2.load_state_dict(get_w(mm_projector_weights, 'mm_projector'))
+            # self.mm_projector2.load_state_dict(get_w(mm_projector_weights, 'mm_projector'))
 
 class LlavaMetaForCausalLM(ABC):
 
@@ -108,12 +108,12 @@ class LlavaMetaForCausalLM(ABC):
         # print("image_features na projector", image_features.shape) #[32, 576, 4096]
         return image_features
 
-    def encode_depth_images(self, images):
-        image_features = self.get_model().get_vision_tower()(images)
-        # print("image_features na alleen vision encoder", image_features.shape) # torch.Size([1, 576, 1024]) 
-        image_features = self.get_model().mm_projector2(image_features)
-        # print("image_features na projector", image_features.shape) #[32, 576, 4096]
-        return image_features
+    # def encode_depth_images(self, images):
+    #     image_features = self.get_model().get_vision_tower()(images)
+    #     # print("image_features na alleen vision encoder", image_features.shape) # torch.Size([1, 576, 1024]) 
+    #     image_features = self.get_model().mm_projector2(image_features)
+    #     # print("image_features na projector", image_features.shape) #[32, 576, 4096]
+    #     return image_features
 
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, position_ids, attention_mask, past_key_values, labels, images, depth_images, image_sizes=None
@@ -180,15 +180,15 @@ class LlavaMetaForCausalLM(ABC):
 
 
             concat_images_depth = torch.cat([image for image in depth_images], dim=0)
-            # depth_image_features = self.encode_images(concat_images_depth)
-            depth_image_features = self.encode_depth_images(concat_images_depth)
+            depth_image_features = self.encode_images(concat_images_depth)
+            # depth_image_features = self.encode_depth_images(concat_images_depth)
             split_sizes = [image.shape[0] for image in depth_images]
             depth_image_features = torch.split(depth_image_features, split_sizes, dim=0)
             depth_image_features = [x.flatten(0, 1).to(concat_images_depth.device) for x in depth_image_features]  
         else:
             image_features = self.encode_images(images)
-            # depth_image_features = self.encode_images(depth_images)
-            depth_image_features = self.encode_depth_images(depth_images)
+            depth_image_features = self.encode_images(depth_images)
+            # depth_image_features = self.encode_depth_images(depth_images)
 
 
         # TODO: image start / end is not implemented here to support pretraining.

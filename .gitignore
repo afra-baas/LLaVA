@@ -48,6 +48,7 @@ notebooks/vqasynth_warehouse_spaces
 *.tex
 *.txt
 *.jpg
+*.jpeg
 *.png
 *.xlsx
 *.csv
