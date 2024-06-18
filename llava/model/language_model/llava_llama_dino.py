@@ -116,7 +116,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         position_ids = kwargs.pop("position_ids", None)
         attention_mask = kwargs.pop("attention_mask", None)
 
-        print("LlavaLlamaForCausalLM generate dino")
+        # print("LlavaLlamaForCausalLM generate dino")
 
         if "inputs_embeds" in kwargs:
             raise NotImplementedError("`inputs_embeds` is not supported")
@@ -139,7 +139,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 depth_images,
                 image_sizes=image_sizes
             )
-            print('out of prepare_inputs_labels_for_multimodal dino')
+            # print('out of prepare_inputs_labels_for_multimodal dino')
         else:
             inputs_embeds = self.get_model().embed_tokens(inputs)
 

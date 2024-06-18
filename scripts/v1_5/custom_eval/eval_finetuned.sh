@@ -14,6 +14,7 @@ epochs=3
 version="7b"
 
 # dataset="VSR"
+# dataset="VSR_f"
 # dataset="VSR_class4"
 # dataset="VSR_class"
 # dataset="Whatsup"
@@ -34,14 +35,20 @@ version="7b"
 # method="method2" # dont forget to change init in model llava_llama
 # method="dino"
 # method="dino_late"
-method="imagebind"
+# method="imagebind"
+method="imagebind_intermediate"
 
 # "no_depth" "conv" "dino" "late"
 
-# for method in "imagebind" ; do
+# for method in "dino" "imagebind" ; do
+# for method in "dino" "conv" "imagebind" ; do
+# for method in "no_depth" "conv" ; do
 # for dataset in "VSR" "VSR_f" "Whatsup" ; do
-# for dataset in  "VSR_random" ; do
-for dataset in  "VSR" ; do
+# for method in "imagebind" ; do
+# for method in "imagebind_intermediate" ; do
+# for method in "fmask" ; do
+# for dataset in  "VSR_f" ; do
+for dataset in  "VSR_class4" "VSR_f" "VSR_random" ; do
 
     TF="False"
 
@@ -55,14 +62,14 @@ for dataset in  "VSR" ; do
     ################################## VSR ###################################################
     if [ "$dataset" = "VSR" ]; then
         TF="True"
-        # CKPT="VSR_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_class_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_BCE_TF_epoch${epochs}-${method}-${model}"
         # CKPT="Spatialvlm_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_plus_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_TF_plus_BCE_epoch${epochs}-${method}-${model}"
-        CKPT="VSR_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        # CKPT="VSR_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
 
 
@@ -81,6 +88,8 @@ for dataset in  "VSR" ; do
 
         CKPT="VSR_f_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_f_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        # CKPT="VSR_f_epoch${epochs}-${method}-${model}_only_lin_proj"
+
 
         depth_path="/project/msc-thesis-project/all_vsr_depth" 
         root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_f"
@@ -125,6 +134,13 @@ for dataset in  "VSR" ; do
 
 
     elif [ "$dataset" = "VSR_class4" ]; then
+        # CKPT="VSR_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_f_epoch${epochs}-${method}-${model}"
+        # CKPT="Whatsup_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
+
+        # CKPT="Whatsup_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+
         CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_imagebind"
         # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
@@ -154,6 +170,13 @@ for dataset in  "VSR" ; do
 
     ################################## Whats Up ###################################################
     elif [ "$dataset" = "Whatsup" ]; then
+        # CKPT="VSR_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_f_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
+
+        # CKPT="VSR_f_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+
         CKPT="Whatsup_epoch${epochs}-${method}-${model}"
         # CKPT="Spatialvlm_epoch${epochs}-${method}-${model}"
         # CKPT="VSR2_epoch${epochs}-${method}-${model}"
@@ -220,12 +243,16 @@ for dataset in  "VSR" ; do
         eval_file="llava.eval.model_vqa_science_resnet"
     elif [ "$method" = "dino" ]; then
         eval_file="llava.eval.model_vqa_science_dino"
+    elif [ "$method" = "dino_direct" ]; then
+        eval_file="llava.eval.model_vqa_science_dino_direct"
     elif [ "$method" = "dino_late" ]; then
         eval_file="llava.eval.model_vqa_science_dino_late"
     elif [ "$method" = "fmask" ]; then
         eval_file="llava.eval.model_vqa_science_fmask"
     elif [ "$method" = "imagebind" ]; then
         eval_file="llava.eval.model_vqa_science_imagebind"
+    elif [ "$method" = "imagebind_intermediate" ]; then
+        eval_file="llava.eval.model_vqa_science_imagebind_intermediate"
     else
         echo "Invalid method specified."
         # eval_file="llava.eval.model_vqa_science_depth"
@@ -239,7 +266,7 @@ for dataset in  "VSR" ; do
     for IDX in $(seq 0 $((CHUNKS-1))); do
         echo "Processing IDX: $IDX"
         CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m $eval_file \
-            --model-path ./checkpoints/checkpoint-${CKPT}-lora \
+            --model-path ./checkpoints_copy2/checkpoint-${CKPT}-lora \
             --model-base $model_base \
             --question-file /project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/${test_file} \
             --image-folder '' \

@@ -67,6 +67,7 @@ import os.path
 import glob
 import json
 import math
+import sys
 
 ##### Arguments
 ##########################################################################################
@@ -82,6 +83,7 @@ parser.add_argument('--consistency',    action="store_true",        help = "True
 parser.add_argument('--grounding',      action="store_true",        help = "True to compute grounding score (If model uses attention).")
 parser.add_argument('--objectFeatures', action="store_true",        help = "True for object-based attention (False for spatial).")
 parser.add_argument('--mapSize',    default = 7,    type = int, help = "Optional, only to get attention score. Images features map size, mapSize * mapSize")
+parser.add_argument('--output-dir',    default = None,  help = "Optional")
 args = parser.parse_args()
 
 print("Please make sure to use our provided visual features as gqadataset.org for better comparability. We provide both spatial and object-based features trained on GQA train set.") 
@@ -131,7 +133,7 @@ questions = loadFile(args.questions.format(tier = args.tier))
 print("Loading predictions...")
 predictions = loadFile(args.predictions.format(tier = args.tier))
 predictions = {p["questionId"]: p["prediction"] for p in predictions}
-print(type(predictions))
+# print(type(predictions))
 
 # Make sure all question have predictions
 for qid in questions:
@@ -427,30 +429,75 @@ for k, _ in detailedMetrics:
     for t in scores[k]:
         scores[k][t] = avg(scores[k][t]) * 100, len(scores[k][t])
 
-# print
-print("")
-for m in metrics:
-    # skip grounding and consistency scores if not requested
-    if m == "grounding" and not args.grounding:
-        continue
-    if m == "consistency" and not args.consistency:
-        continue
+# # print
+# print("")
+# for m in metrics:
+#     # skip grounding and consistency scores if not requested
+#     if m == "grounding" and not args.grounding:
+#         continue
+#     if m == "consistency" and not args.consistency:
+#         continue
 
-    # print score
-    print("{title}: {score:.2f}{suffix}".format(title = m.capitalize(), score = scores[m], 
-        suffix = " (lower is better)" if m == "distribution" else "%"))
+#     # print score
+#     print("{title}: {score:.2f}{suffix}".format(title = m.capitalize(), score = scores[m], 
+#         suffix = " (lower is better)" if m == "distribution" else "%"))
 
-for m, mPrintName in detailedMetrics:
-    print("")
-    # print metric title
-    print("{}:".format(mPrintName))
+# for m, mPrintName in detailedMetrics:
+#     print("")
+#     # print metric title
+#     print("{}:".format(mPrintName))
     
-    for t in sorted(list(scores[m].keys())):
-        # set sub-metric title
-        tName = t
-        if isinstance(scores[k], list):
-            tName = subMetrics.get(t, t).capitalize()
+#     for t in sorted(list(scores[m].keys())):
+#         # set sub-metric title
+#         tName = t
+#         if isinstance(scores[k], list):
+#             tName = subMetrics.get(t, t).capitalize()
 
-        # print score
-        print("  {title}: {score:.2f}{suffix} ({amount} questions)".format(title = tName, 
-            score = scores[m][t][0], suffix = "%", amount = scores[m][t][1]))    
+#         # print score
+#         print("  {title}: {score:.2f}{suffix} ({amount} questions)".format(title = tName, 
+#             score = scores[m][t][0], suffix = "%", amount = scores[m][t][1]))    
+
+
+# Open a file in write mode
+with open(f"{args.output_dir}", "w") as f:
+    # Redirect the standard output to the file
+    original_stdout = sys.stdout
+    sys.stdout = f
+
+    # Your existing code for printing metrics
+    print("")
+    for m in metrics:
+        # Skip grounding and consistency scores if not requested
+        if m == "grounding" and not args.grounding:
+            continue
+        if m == "consistency" and not args.consistency:
+            continue
+
+        # Print score
+        print("{title}: {score:.2f}{suffix}".format(
+            title=m.capitalize(),
+            score=scores[m],
+            suffix=" (lower is better)" if m == "distribution" else "%"
+        ))
+
+    for m, mPrintName in detailedMetrics:
+        print("")
+        # Print metric title
+        print("{}:".format(mPrintName))
+
+        for t in sorted(list(scores[m].keys())):
+            # Set sub-metric title
+            tName = t
+            if isinstance(scores[m][t], list):  # Changed k to m
+                tName = subMetrics.get(t, t).capitalize()
+
+            # Print score
+            print("  {title}: {score:.2f}{suffix} ({amount} questions)".format(
+                title=tName,
+                score=scores[m][t][0],
+                suffix="%",
+                amount=scores[m][t][1]
+            ))
+
+    # Reset the standard output back to the console
+    sys.stdout = original_stdout

@@ -26,6 +26,8 @@ from llava.constants import DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN, D
 from llava.train.train_custom_imagebind import *
 
 def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto", device="cuda"):
+    Freeze_VLM = False
+    
     kwargs = {"device_map": device_map}
 
     if device != "cuda":
@@ -109,12 +111,13 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
             # print(' saved mm_projector_weights', mm_projector_weights)
             # model.load_state_dict(mm_projector_weights, strict=False)
 
-            # from peft import PeftModel
-            # print('Loading LoRA weights...')
-            # model = PeftModel.from_pretrained(model, model_path)
-            # print('Merging LoRA weights...')
-            # model = model.merge_and_unload()
-            # print('Model is loaded...')
+            if Freeze_VLM == False:
+                from peft import PeftModel
+                print('Loading LoRA weights...')
+                model = PeftModel.from_pretrained(model, model_path)
+                print('Merging LoRA weights...')
+                model = model.merge_and_unload()
+                print('Model is loaded...')
 
 
         elif model_base is not None:

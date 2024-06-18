@@ -194,6 +194,9 @@ def custom_make_supervised_data_module(tokenizer, data_args):
 def train():
     global local_rank
 
+    Freeze_VLM=False
+    Freeze_proj=False
+
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
@@ -260,26 +263,24 @@ def train():
                 output.requires_grad_(True)
             model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
 
-    if training_args.lora_enable:
-        from peft import LoraConfig, get_peft_model
-        lora_config = LoraConfig(
-            r=training_args.lora_r,
-            lora_alpha=training_args.lora_alpha,
-            target_modules=find_all_linear_names(model),
-            lora_dropout=training_args.lora_dropout,
-            bias=training_args.lora_bias,
-            task_type="CAUSAL_LM",
-        )
-        if training_args.bits == 16:
-            if training_args.bf16:
-                model.to(torch.bfloat16)
-            if training_args.fp16:
-                model.to(torch.float16)
-        rank0_print("Adding LoRA adapters...")
-        model = get_peft_model(model, lora_config)
-
-    # I added 
-    # model.lm_head.weight.requires_grad = False
+    if Freeze_VLM==False:
+        if training_args.lora_enable:
+            from peft import LoraConfig, get_peft_model
+            lora_config = LoraConfig(
+                r=training_args.lora_r,
+                lora_alpha=training_args.lora_alpha,
+                target_modules=find_all_linear_names(model),
+                lora_dropout=training_args.lora_dropout,
+                bias=training_args.lora_bias,
+                task_type="CAUSAL_LM",
+            )
+            if training_args.bits == 16:
+                if training_args.bf16:
+                    model.to(torch.bfloat16)
+                if training_args.fp16:
+                    model.to(torch.float16)
+            rank0_print("Adding LoRA adapters...")
+            model = get_peft_model(model, lora_config)
 
     # Tokenizer init
     if 'mpt' in model_args.model_name_or_path:
@@ -336,24 +337,30 @@ def train():
             for p in model.get_model().mm_projector.parameters():
                 p.requires_grad = True
 
-            # for p in model.get_model().mm_projector2.parameters():
-            #     p.requires_grad = True
-
         model.config.freeze_mm_mlp_adapter = training_args.freeze_mm_mlp_adapter
         if training_args.freeze_mm_mlp_adapter:
             for p in model.get_model().mm_projector.parameters():
                 p.requires_grad = False
-
-            # for p in model.get_model().mm_projector2.parameters():
-            #     p.requires_grad = False
 
         if training_args.bits in [4, 8]:
             print('didnt expect to come here')
             model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
             # model.get_model().mm_projector2.to(dtype=compute_dtype, device=training_args.device)
 
-        # for p in model.get_model().mm_projector2.parameters():
-        #     p.requires_grad = True
+        if Freeze_VLM:
+            model.lm_head.weight.requires_grad = False
+            model.model.requires_grad_(False)
+        if Freeze_proj:
+            for p in model.get_model().mm_projector.parameters():
+                p.requires_grad = False
+        else:
+            for p in model.get_model().mm_projector.parameters():
+                p.requires_grad = True
+
+        if hasattr(model.get_model(), "mm_projector2"):
+            print('has mm_projector2')
+            for p in model.get_model().mm_projector2.parameters():
+                p.requires_grad = True
 
 
         from peft.tuners.lora import LoraLayer

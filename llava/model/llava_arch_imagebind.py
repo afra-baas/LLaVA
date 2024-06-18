@@ -36,7 +36,6 @@ class LlavaMetaModel:
             self.mm_projector = build_vision_projector(config)
             self.linear_depth_projector = nn.Linear(config.mm_hidden_size, config.hidden_size)
     
-
             if 'unpad' in getattr(config, 'mm_patch_merge_type', ''):
                 self.image_newline = nn.Parameter(
                     torch.empty(config.hidden_size, dtype=self.dtype)
@@ -90,7 +89,6 @@ class LlavaMetaModel:
             # In case it is frozen by LoRA
             for p in self.mm_projector.parameters():
                 p.requires_grad = True
-                # p.requires_grad = False
 
         if pretrain_mm_mlp_adapter is not None:
             print('loads the mm_projector weights')
@@ -149,16 +147,17 @@ class LlavaMetaForCausalLM(ABC):
     def get_vision_tower(self):
         return self.get_model().get_vision_tower()
 
-    def encode_images(self, images):
+    def encode_images(self, images, depth_images=None):
         image_features = self.get_model().get_vision_tower()(images)
         image_features = self.get_model().mm_projector(image_features)
         return image_features
 
+
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, position_ids, attention_mask, past_key_values, labels,
-        images, image_sizes=None
+        images, depth_images, image_sizes=None
     ):
-        print("prepare_inputs_labels_for_multimodal in LlavaMetaForCausalLM in arch imagebind  i dont wanna come here! ")
+        # print("prepare_inputs_labels_for_multimodal in LlavaMetaForCausalLM in arch in imagebind custon")
         vision_tower = self.get_vision_tower()
         if vision_tower is None or images is None or input_ids.shape[1] == 1:
             if past_key_values is not None and vision_tower is not None and images is not None and input_ids.shape[1] == 1:
@@ -169,8 +168,10 @@ class LlavaMetaForCausalLM(ABC):
             if type(images) is list:
                 print('type(images) is list')
                 images = [x.unsqueeze(0) if x.ndim == 3 else x for x in images]
+
+            concat_images_depth = torch.cat([image for image in depth_images], dim=0)
             concat_images = torch.cat([image for image in images], dim=0)
-            image_features = self.encode_images(concat_images)
+            image_features = self.encode_images(concat_images, concat_images_depth)
             split_sizes = [image.shape[0] for image in images]
             image_features = torch.split(image_features, split_sizes, dim=0)
             # image_features = [x.flatten(0, 1).to(concat_images.device) for x in image_features]
@@ -220,7 +221,7 @@ class LlavaMetaForCausalLM(ABC):
             else:
                 raise ValueError(f"Unexpected mm_patch_merge_type: {self.config.mm_patch_merge_type}")
         else:
-            image_features = self.encode_images(images)
+            image_features = self.encode_images(images, depth_images)
         
         # print("image_features in arch ", image_features.shape) #[1, 576, 4096]
         
@@ -354,6 +355,7 @@ class LlavaMetaForCausalLM(ABC):
             position_ids = None
 
         return None, position_ids, attention_mask, past_key_values, new_input_embeds, new_labels
+
 
     def initialize_vision_tokenizer(self, model_args, tokenizer):
         if model_args.mm_use_im_patch_token:

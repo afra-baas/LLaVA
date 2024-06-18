@@ -7,7 +7,7 @@ import shortuuid
 
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.conversation import conv_templates, SeparatorStyle
-from llava.model.builder_depth_fmask import load_pretrained_model
+from llava.model.builder_depth_imagebind_intermediate import load_pretrained_model, load_and_transform_depth_data
 from llava.utils import disable_torch_init
 from llava.mm_utils import tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
 
@@ -47,13 +47,7 @@ def eval_model(args):
 
         if 'image' in line:
             image_file = line["image"]
-            if image_file.startswith("http") or image_file.startswith("https"):
-                # response = requests.get(image_file)
-                # image = Image.open(BytesIO(response.content)).convert('RGB')
-                response =requests.get(image_file, stream=True)
-                image = Image.open(response.raw).convert('RGB')
-            else:
-                image = Image.open(os.path.join(args.image_folder, image_file)).convert('RGB')
+            image = Image.open(os.path.join(args.image_folder, image_file)).convert('RGB')
             
             image_tensor = image_processor.preprocess(image, return_tensors='pt')['pixel_values'][0]
             images = image_tensor.unsqueeze(0).half().cuda()
@@ -66,10 +60,17 @@ def eval_model(args):
             else:
                 depth_path=args.depth_path
                 
-            depth_image = Image.open(os.path.join(depth_path, image_file.split('/')[-1])).convert('RGB')
-            depth_tensor = image_processor.preprocess(depth_image, return_tensors='pt')['pixel_values'][0]
-            depth_images = depth_tensor.unsqueeze(0).half().cuda()
-            depth_image_sizes = [depth_image.size]
+
+            depth_path = os.path.join(depth_path, image_file.split('/')[-1])
+            # print('depth_path', depth_path)
+            depth_images= load_and_transform_depth_data([depth_path])[0]
+            depth_images = depth_images.unsqueeze(0).half().cuda()
+
+
+            # depth_image = Image.open(os.path.join(depth_path, image_file.split('/')[-1])).convert('RGB')
+            # depth_tensor = image_processor.preprocess(depth_image, return_tensors='pt')['pixel_values'][0]
+            # depth_images = depth_tensor.unsqueeze(0).half().cuda()
+            # depth_image_sizes = [depth_image.size]
 
             if getattr(model.config, 'mm_use_im_start_end', False):
                 qs = DEFAULT_IM_START_TOKEN + DEFAULT_IMAGE_TOKEN + DEFAULT_IM_END_TOKEN + '\n' + qs
@@ -80,7 +81,7 @@ def eval_model(args):
             print('====================hierr daarom images is None')
             images = None
             image_sizes = None
-            depth_image_sizes = None
+            # depth_image_sizes = None
 
         if args.single_pred_prompt:
             qs = qs + '\n' + "Answer with the option's letter from the given choices directly."

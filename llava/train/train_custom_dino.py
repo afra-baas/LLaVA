@@ -24,6 +24,8 @@ from transformers import AutoImageProcessor, AutoModel
 
 import wandb
 import random
+from datetime import datetime
+dt = datetime.now()
 
 class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     config_class = LlavaConfig
@@ -33,19 +35,10 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
         super(DepthLlavaLlamaForCausalLM, self).__init__(config)
         # print('DepthLlavaLlamaForCausalLM dino')
 
-        # self.dino_model = DinoModel.from_pretrained("facebook/dino-vits16") 
-        # self.dino_feature_extractor = DinoFeatureExtractor.from_pretrained("facebook/dino-vits16")
-
         self.dino_feature_extractor = AutoImageProcessor.from_pretrained('facebook/dinov2-base')
         self.dino_model = AutoModel.from_pretrained('facebook/dinov2-base')
-        self.linear_projection = nn.Linear(768, 1024)
-        self.dino_model.requires_grad_(True)
-        self.linear_projection.requires_grad_(True)
-
-        # for name, param in self.dino_model.named_parameters():
-        #     print(f"Parameter name: {name}, requires_grad: {param.requires_grad}")
-
-
+        # self.linear_projection = nn.Linear(768, 1024)
+        self.linear_projection = nn.Linear(768, 4096)
         
     def initialize_weights(self):
         print("CHECK: initialize_weights")
@@ -114,9 +107,6 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
         if "inputs_embeds" in kwargs:
             raise NotImplementedError("`inputs_embeds` is not supported")
         
-        # print("DepthLlavaLlamaForCausalLM generate dino ")
-        # print("MRO:", [cls.__name__ for cls in DepthLlavaLlamaForCausalLM.mro()])
-        
         return super().generate(
             inputs,
             images,
@@ -127,7 +117,39 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
 
     
     def encode_images(self, images, depth_images=None):
-        return super().encode_images(images, depth_images)
+
+        # image_features = self.get_model().get_vision_tower()(images) # torch.Size([16, 576, 1024])   
+
+        # # Preprocess the depth maps
+        # inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
+        # inputs = inputs.to(self.dino_model.device) 
+        # outputs = self.dino_model(**inputs) 
+        # depth_features = outputs[0] # [16, 257, 768]
+        # depth_features = self.linear_projection(depth_features)
+
+        # # print('shapes', image_features.shape, depth_features.shape) # shapes torch.Size([16, 576, 1024]) torch.Size([16, 257, 768])  
+        # concatenated_embedding = torch.cat((image_features, depth_features), dim=1)
+        # # print('concatenated_embedding', concatenated_embedding.shape) # concatenated_embedding torch.Size([16, 833, 1024]) 
+
+        # image_features = self.get_model().mm_projector(concatenated_embedding)
+        # return image_features
+
+
+        image_features = self.get_model().get_vision_tower()(images) # torch.Size([1, 576, 1024])   
+        image_features = self.get_model().mm_projector(image_features) #([1, 576, 4096]) 
+
+        # Preprocess the depth maps
+        inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
+        inputs = inputs.to(self.dino_model.device)
+        outputs = self.dino_model(**inputs)
+        depth_features = outputs[0]
+        depth_features = self.linear_projection(depth_features)
+
+        # print('shapes', image_features.shape, depth_features.shape) # shapes torch.Size([16, 576, 4096]) torch.Size([16, 257, 4096])  
+        concatenated_embedding = torch.cat((image_features, depth_features), dim=1)
+        # print('concatenated_embedding', concatenated_embedding.shape) # concatenated_embedding torch.Size([16, 833, 4096]) 
+        return concatenated_embedding
+    
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):
         # print("prepare_inputs_for_generation dino ")
@@ -230,10 +252,12 @@ def custom_make_supervised_data_module(tokenizer, data_args):
 def train():
     global local_rank
 
+    Freeze_VLM=False
+    Freeze_dino=True
+
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
-    print('training_args', training_args)
     local_rank = training_args.local_rank
     compute_dtype = (torch.float16 if training_args.fp16 else (torch.bfloat16 if training_args.bf16 else torch.float32))
 
@@ -303,24 +327,25 @@ def train():
 
     # print('state_dict.keys() before lora ', model.fusion_layer.state_dict().keys()) # (['weight', 'bias'])
     # LORA adds adapters, used to adaptively adjust the learning rate of each weight in the layer based on its importance for the task at hand.
-    if training_args.lora_enable:
-        from peft import LoraConfig, get_peft_model
-        lora_config = LoraConfig(
-            r=training_args.lora_r,
-            lora_alpha=training_args.lora_alpha,
-            target_modules=find_all_linear_names(model),
-            lora_dropout=training_args.lora_dropout,
-            bias=training_args.lora_bias,
-            task_type="CAUSAL_LM",
-        )
-        if training_args.bits == 16:
-            if training_args.bf16:
-                model.to(torch.bfloat16)
-            if training_args.fp16:
-                model.to(torch.float16)
-        rank0_print("Adding LoRA adapters...")
-        model = get_peft_model(model, lora_config)
 
+    if Freeze_VLM==False:
+        if training_args.lora_enable:
+            from peft import LoraConfig, get_peft_model
+            lora_config = LoraConfig(
+                r=training_args.lora_r,
+                lora_alpha=training_args.lora_alpha,
+                target_modules=find_all_linear_names(model),
+                lora_dropout=training_args.lora_dropout,
+                bias=training_args.lora_bias,
+                task_type="CAUSAL_LM",
+            )
+            if training_args.bits == 16:
+                if training_args.bf16:
+                    model.to(torch.bfloat16)
+                if training_args.fp16:
+                    model.to(torch.float16)
+            rank0_print("Adding LoRA adapters...")
+            model = get_peft_model(model, lora_config)
     # print('state_dict.keys() after lora ', model.fusion_layer.state_dict().keys()) # (['base_layer.weight', 'base_layer.bias', 'lora_A.default.weight', 'lora_B.default.weight'])  
     
     # Tokenizer init
@@ -386,17 +411,28 @@ def train():
         if training_args.bits in [4, 8]:
             model.get_model().mm_projector.to(dtype=compute_dtype, device=training_args.device)
 
-        
-        # # check if projection is being trained -> base_model.model.model.mm_projector -> all weights and bias are true
-        # model_name = model.__class__.__name__
-        # print(f"Model name: {model_name}")
-        # for name, param in model.named_parameters():
-        #     if param.requires_grad ==True:
-        #         print(f"Parameter name: {name}, requires_grad: {param.requires_grad}")
-        # model_model_name = model.model.__class__.__name__ # DepthLlavaLlamaForCausalLM
+        if Freeze_VLM:
+            model.lm_head.weight.requires_grad = False
+            model.model.requires_grad_(False)
+            for p in model.get_model().mm_projector.parameters():
+                p.requires_grad = False
 
+        if Freeze_dino:
+            # model.dino_model.requires_grad_(False)
+            for p in model.dino_model.parameters():
+                p.requires_grad = False
+        else:
+            # model.dino_model.requires_grad_(True)
+            for p in model.dino_model.parameters():
+                p.requires_grad = True
+
+        # model.linear_projection.requires_grad_(True)
+        for p in model.linear_projection.parameters():
+                p.requires_grad = True
+
+        from peft.tuners.lora import LoraLayer
         model_name = model.__class__.__name__
-        file = "/project/train_custom_dino_all_requires_grad.txt"
+        file = f"/project/model_states/train_custom_dino_all_requires_grad{dt}.txt"
         with open(file, "w") as f:
             f.write(f"Model name: {model_name}\n")
             for name, param in model.named_parameters():
@@ -405,6 +441,26 @@ def train():
             trainable_params = sum(
                 p.numel() for p in model.parameters() if p.requires_grad)
             f.write(f"Trainable parameters: {trainable_params}\n")
+
+            trainable_lora_params=0
+            total_lora_params=0
+            for name, module in model.named_modules():
+                if isinstance(module, LoraLayer):
+                    for param_name, param in module.named_parameters():
+                        if param.requires_grad:
+                            trainable_lora_params += param.numel()
+                        total_lora_params += param.numel()
+            f.write(f"Trainable parameters in LoRA layers: {trainable_lora_params}\n")
+            f.write(f"Total parameters in LoRA layers: {total_lora_params}\n")
+
+        file = f"/project/model_states/train_dino_linear_proj_{dt}.txt"
+        with open(file, "w") as f:
+            for name, param in model.linear_projection.named_parameters():
+                f.write(f"Parameter: {name}\n")
+                f.write(str(param.cpu().detach().to(torch.float32).numpy()))
+                f.write("----------------------------------------------")
+                f.write("\n")
+
 
 
         model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
@@ -430,16 +486,12 @@ def train():
     data_module = custom_make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_args)
     
-    # wandb.init(project="jupyter-proj")
-    # wandb.watch(model, log='all')
-    # print('training_args.output_dir', training_args.output_dir)
 
     trainer = LLaVATrainer(model=model,
                     tokenizer=tokenizer,
                     args=training_args,
                     **data_module)
     
-    # print('training_args.output_dir', training_args.output_dir)
 
     print('list checkpoint', list(pathlib.Path(training_args.output_dir).glob("checkpoint-*"))) #[]
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
@@ -491,6 +543,14 @@ def train():
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
+        
+    file = f"/project/model_states/train_dino_linear_proj_{dt}.txt"
+    with open(file, "a") as f:
+        for name, param in model.linear_projection.named_parameters():
+            f.write(f"Parameter: {name}\n")
+            f.write(str(param.cpu().detach().to(torch.float32).numpy()))
+            f.write("----------------------------------------------")
+            f.write("\n")
 
 
 if __name__ == "__main__":

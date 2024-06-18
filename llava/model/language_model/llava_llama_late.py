@@ -28,7 +28,8 @@ from ..llava_arch_late import LlavaMetaModel, LlavaMetaForCausalLM
 
 
 class LlavaConfig(LlamaConfig):
-    model_type = "llava_llama_late"
+    # model_type = "llava_llama_late"
+    model_type = "llava_llama"
     # model_type = "llava"
 
 
@@ -116,7 +117,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         position_ids = kwargs.pop("position_ids", None)
         attention_mask = kwargs.pop("attention_mask", None)
         
-        print("LlavaLlamaForCausalLM generate late ")
+        # print("LlavaLlamaForCausalLM generate late ")
         # print("MRO:", [cls.__name__ for cls in LlavaLlamaForCausalLM.mro()])
         # print("kwargs", kwargs)
         if "inputs_embeds" in kwargs:
@@ -140,7 +141,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
                 depth_images,
                 image_sizes=image_sizes
             )
-            print('out of prepare_inputs_labels_for_multimodal')
+            # print('out of prepare_inputs_labels_for_multimodal')
             # print("inputs_embeds", inputs_embeds.shape)
             # print(inputs_embeds)
         else:
@@ -167,6 +168,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             inputs['image_sizes'] = image_sizes
         return inputs
 
-AutoConfig.register("llava_llama_late", LlavaConfig)
+# AutoConfig.register("llava_llama_late", LlavaConfig)
+AutoConfig.register("llava_llama", LlavaConfig)
 # AutoConfig.register("llava", LlavaConfig)
 AutoModelForCausalLM.register(LlavaConfig, LlavaLlamaForCausalLM)

@@ -7,12 +7,15 @@ CHUNKS=${#GPULIST[@]}
 
 # CKPT="llava-v1.5-13b"
 SPLIT="llava_gqa_testdev_balanced"
-GQADIR="./playground/data/eval/gqa/data"
+# GQADIR="./playground/data/eval/gqa/data"
 # --model-path liuhaotian/$CKPT \
 
+method='no_depth'
+dataset='VSR'
+
 base="llava-v1.5-7b"
-CKPT="VSR_TF_epoch3-no_depth-${base}"
-# CKPT="epoch3-no_depth-${base}"
+CKPT="${dataset}_epoch3-${method}-${base}"
+GQADIR="./playground/data/eval/gqa/data/$CKPT"
 
         # --model-base liuhaotian/$base \
         # --model-path /project/msc-thesis-project/forked_repos/LLaVA/checkpoints/checkpoint-${CKPT}-lora \
@@ -48,6 +51,6 @@ done
 python scripts/convert_gqa_for_eval.py --src $output_file --dst $GQADIR/testdev_balanced_predictions.json
 
 cd $GQADIR 
-python eval.py --tier testdev_balanced 
+python eval.py --tier testdev_balanced --output-dir GQA_acc_${dataset}_${method}_${base}.jsonl
 
 echo /playground/data/eval/gqa/answers/$SPLIT/$CKPT/merge.jsonl

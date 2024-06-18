@@ -92,35 +92,9 @@ class LlavaMetaForCausalLM(ABC):
         return self.get_model().get_vision_tower()
     
     def encode_images(self, images, depth_images=None):
-
-        # # Preprocess the depth maps
-        # pixel_values = self.dino_feature_extractor(images=depth_images, return_tensors="pt").pixel_values
-        # # Pass the preprocessed depth maps through the DINO model
-        # outputs = self.dino_model(pixel_values)
-        # # Extract the depth embeddings from the output
-        # depth_features = outputs.last_hidden_state[:, 0]  # [batch_size, embedding_dim]
-
-        # inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
-        # # print(inputs)
-        # inputs = inputs.to(self.dino_model.device)
-        # # inputs = inputs.to(device, dtype=torch.bfloat16)
-        # outputs = self.dino_model(**inputs)
-        # depth_features = outputs[0]
-
-
-        depth_features = depth_images
+        print('encode images in llava_arch dino. I dont want to be here!')
         image_features = self.get_model().get_vision_tower()(images)
-        # print("image_features na alleen vision encoder", image_features.shape) # torch.Size([1, 576, 1024])   
-        # print('shapes', image_features.shape, depth_features.shape) # shapes torch.Size([16, 576, 1024]) torch.Size([16, 257, 768])  
-
-        depth_features = self.linear_projection(depth_features)
-        concatenated_embedding = torch.cat((image_features, depth_features), dim=1)
-        # print('concatenated_embedding', concatenated_embedding.shape) # concatenated_embedding torch.Size([16, 833, 1024]) 
-
-        image_features = self.get_model().mm_projector(concatenated_embedding)
-
-        # image_features = self.get_model().mm_projector(image_features)
-        # print("image_features na projector", image_features.shape) # image_features na projector torch.Size([16, 833, 4096])
+        image_features = self.get_model().mm_projector(image_features)
         return image_features
 
     def prepare_inputs_labels_for_multimodal(
@@ -134,17 +108,15 @@ class LlavaMetaForCausalLM(ABC):
             return input_ids, position_ids, attention_mask, past_key_values, None, labels
         
 
-        # print(type(images))  # torch.Tensor
-        # print(type(depth_images)) #'list'
-
         if type(images) is list or images.ndim == 5:
             if type(images) is list:
                 print('need extra check from arch in arch dino')
 
             print('--- !!!!!!!!!!!!!!!!!! Let op images are a list!!!!!!!!!!!!!!!!!!!')
             concat_images = torch.cat([image for image in images], dim=0)
-            concat_images_depth = torch.cat([image for image in depth_images], dim=0)
-            image_features = self.encode_images(concat_images, concat_images_depth)
+            # concat_images_depth = torch.cat([image for image in depth_images], dim=0)
+            # image_features = self.encode_images(concat_images, concat_images_depth)
+            image_features = self.encode_images(concat_images)
             split_sizes = [image.shape[0] for image in images]
             image_features = torch.split(image_features, split_sizes, dim=0)
             
@@ -195,15 +167,13 @@ class LlavaMetaForCausalLM(ABC):
             # print(depth_images) # [<PIL.Image.Image image mode=RGB size=640x416 at 0x7F42543577F0>, <PIL.Image.Image image mode=RGB size=640x427 at 0x7F4254357790>, <PIL.Image.Image image mode=RGB size=480x640 at 0x7F4254357760>,
             # print(depth_images) #<PIL.Image.Image image mode=RGB size=640x416 at 0x7F42543577F0> eval
 
-            inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
-            # print(inputs)
-            inputs = inputs.to(self.dino_model.device)
-            # inputs = inputs.to(device, dtype=torch.bfloat16)
-            outputs = self.dino_model(**inputs)
-            depth_features = outputs[0]
+            # inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
+            # inputs = inputs.to(self.dino_model.device)
+            # outputs = self.dino_model(**inputs)
+            # depth_features = outputs[0]
+            # image_features = self.encode_images(images,depth_features)
 
-            image_features = self.encode_images(images,depth_features)
-            # image_features_depth = self.encode_images(images)
+            image_features = self.encode_images(images,depth_images)
 
 
         # TODO: image start / end is not implemented here to support pretraining.

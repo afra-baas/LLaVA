@@ -75,14 +75,10 @@ class LlavaMetaModel:
             # In case it is frozen by LoRA
             for p in self.mm_projector.parameters():
                 p.requires_grad = True
-                # p.requires_grad = False
         
-        # if getattr(self, 'mm_projector2', None) is None:
-        #     self.mm_projector2 = build_vision_projector(self.config)
-        # else:
-        #     for p in self.mm_projector2.parameters():
-        #         p.requires_grad = True
-        #         # p.requires_grad = False
+        if getattr(self, 'mm_projector2', None) is not None:
+            for p in self.mm_projector2.parameters():
+                p.requires_grad = True
 
         if pretrain_mm_mlp_adapter is not None:
             mm_projector_weights = torch.load(pretrain_mm_mlp_adapter, map_location='cpu')
@@ -90,7 +86,8 @@ class LlavaMetaModel:
                 return {k.split(keyword + '.')[1]: v for k, v in weights.items() if keyword in k}
 
             self.mm_projector.load_state_dict(get_w(mm_projector_weights, 'mm_projector'))
-            # self.mm_projector2.load_state_dict(get_w(mm_projector_weights, 'mm_projector'))
+            if getattr(self, 'mm_projector2', None) is not None:
+                self.mm_projector2.load_state_dict(get_w(mm_projector_weights, 'mm_projector'))
 
 class LlavaMetaForCausalLM(ABC):
 
@@ -102,23 +99,19 @@ class LlavaMetaForCausalLM(ABC):
         return self.get_model().get_vision_tower()
     
     def encode_images(self, images):
-        image_features = self.get_model().get_vision_tower()(images)
-        # print("image_features na alleen vision encoder", image_features.shape) # torch.Size([1, 576, 1024]) 
-        image_features = self.get_model().mm_projector(image_features)
-        # print("image_features na projector", image_features.shape) #[32, 576, 4096]
+        image_features = self.get_model().get_vision_tower()(images) # torch.Size([1, 576, 1024]) 
+        image_features = self.get_model().mm_projector(image_features) #[32, 576, 4096]
         return image_features
 
     # def encode_depth_images(self, images):
     #     image_features = self.get_model().get_vision_tower()(images)
-    #     # print("image_features na alleen vision encoder", image_features.shape) # torch.Size([1, 576, 1024]) 
     #     image_features = self.get_model().mm_projector2(image_features)
-    #     # print("image_features na projector", image_features.shape) #[32, 576, 4096]
     #     return image_features
 
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, position_ids, attention_mask, past_key_values, labels, images, depth_images, image_sizes=None
     ):
-        print("prepare_inputs_labels_for_multimodal in LlavaMetaForCausalLM in late")
+        # print("prepare_inputs_labels_for_multimodal in LlavaMetaForCausalLM in late")
         vision_tower = self.get_vision_tower()
         if vision_tower is None or images is None or input_ids.shape[1] == 1:
             if past_key_values is not None and vision_tower is not None and images is not None and input_ids.shape[1] == 1:

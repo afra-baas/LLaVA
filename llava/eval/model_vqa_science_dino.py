@@ -108,7 +108,7 @@ def eval_model(args):
             )
 
         outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0].strip()
-        print("outputs: ", outputs)
+        # print("outputs: ", outputs)
 
 
         ans_id = shortuuid.uuid()

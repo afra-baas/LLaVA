@@ -98,12 +98,12 @@ class LlavaMetaForCausalLM(ABC):
         # Reshape f_depth to (batch_size, num_channels, height * width)
         depth_images = depth_images.mean(dim=1, keepdim=True) # TODO: gray scale a different way
         f_depth=depth_images # [32, 1, 336, 336]
-        print('f_depth', f_depth.shape) # type tensor
+        # print('f_depth', f_depth.shape) # type tensor
         batch_size= depth_images.shape[0]
         num_channels= depth_images.shape[1]
         f_depth_flat = f_depth.view(batch_size, num_channels, -1)
-        print('f_depth_flat', f_depth_flat.shape) #[32, 1, 112896]
-        print('f_depth_flat T', f_depth_flat.transpose(1, 2).shape) #[32, 112896, 1]
+        # print('f_depth_flat', f_depth_flat.shape) #[32, 1, 112896]
+        # print('f_depth_flat T', f_depth_flat.transpose(1, 2).shape) #[32, 112896, 1]
         # Compute the outer product of f_depth_flat with its transpose
         attention_matrix = torch.bmm(f_depth_flat, f_depth_flat.transpose(1, 2))
         # print('attention_matrix ',attention_matrix)
@@ -115,18 +115,18 @@ class LlavaMetaForCausalLM(ABC):
 
         # Convert the tensor to a floating-point data type
         attention_matrix_softmax2_float = attention_matrix_softmax2.to(torch.float32)
-        print('attention_matrix_softmax2_float ', attention_matrix_softmax2_float.shape) #torch.Size([32, 1, 1]) 
+        # print('attention_matrix_softmax2_float ', attention_matrix_softmax2_float.shape) #torch.Size([32, 1, 1]) 
 
         # Step 3: Element-wise multiply to obtain f_mask
         f_mask = torch.mul(f_depth, attention_matrix_softmax2_float.unsqueeze(1)) #RuntimeError: The size of tensor a (336) must match the size of tensor b (3) at non-singleton dimension 3
-        print(f_mask.shape)
+        # print(f_mask.shape)
         # Normalize f_mask
         f_mask = nn.functional.normalize(f_mask, p=2, dim=1)
-        print(f_mask.shape)
+        # print(f_mask.shape)
 
         # f_mask = f_mask.permute(0, 3, 1, 2)
         masked_img = images * f_mask.expand(-1, 3, -1, -1)
-        print(masked_img.shape)
+        # print(masked_img.shape)
 
         image_features = self.get_model().get_vision_tower()(masked_img).to(torch.float32)
 
@@ -190,8 +190,14 @@ class LlavaMetaForCausalLM(ABC):
         # # Total accuracy: 32.93% Evaluating epoch1-method2-llava-v1.5-7b 
         # # Total accuracy: 48.53% Evaluating VSR_TF_epoch1-method2-llava-v1.5-7b 
         
-
-
+        input_dtype = image_features.dtype
+        mm_projector = self.get_model().mm_projector
+        for layer in mm_projector:
+            if isinstance(layer, nn.Linear):
+                layer.weight.data = layer.weight.data.to(input_dtype)
+                if layer.bias is not None:
+                    layer.bias.data = layer.bias.data.to(input_dtype)
+            
         image_features = self.get_model().mm_projector(image_features)
         # print("image_features na projector", image_features.shape) #[32, 576, 4096]
         return image_features
@@ -199,7 +205,7 @@ class LlavaMetaForCausalLM(ABC):
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, position_ids, attention_mask, past_key_values, labels, images, depth_images, image_sizes=None
     ):
-        print("prepare_inputs_labels_for_multimodal in LlavaMetaForCausalLM in arch method2")
+        # print("prepare_inputs_labels_for_multimodal in LlavaMetaForCausalLM in arch method2")
         vision_tower = self.get_vision_tower()
         if vision_tower is None or images is None or input_ids.shape[1] == 1:
             if past_key_values is not None and vision_tower is not None and images is not None and input_ids.shape[1] == 1:

@@ -24,6 +24,7 @@ output
 
 checkpoints
 checkpoints copy
+checkpoints_copy2
 ckpts*
 
 .ipynb_checkpoints
@@ -43,7 +44,7 @@ scripts/unused
 wandb
 
 docs
-notebooks/vqasynth_warehouse_spaces
+# notebooks/vqasynth_warehouse_spaces
 
 *.tex
 *.txt

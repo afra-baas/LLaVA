@@ -26,6 +26,7 @@ from llava.constants import DEFAULT_IMAGE_PATCH_TOKEN, DEFAULT_IM_START_TOKEN, D
 from llava.train.train_custom import *
 
 def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto", device="cuda", use_flash_attn=False, **kwargs):
+    Freeze_VLM = False
     kwargs = {"device_map": device_map, **kwargs}
 
     if device != "cuda":
@@ -84,20 +85,21 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 non_lora_trainables = {(k[6:] if k.startswith('model.') else k): v for k, v in non_lora_trainables.items()}
             model.load_state_dict(non_lora_trainables, strict=False)
 
-            from peft import PeftModel
-            print('Loading LoRA weights...')
-            model = PeftModel.from_pretrained(model, model_path)
-            print('Merging LoRA weights...')
-            model = model.merge_and_unload()
-            print('Model is loaded...')
+            if Freeze_VLM==False:
+                from peft import PeftModel
+                print('Loading LoRA weights...')
+                model = PeftModel.from_pretrained(model, model_path)
+                print('Merging LoRA weights...')
+                model = model.merge_and_unload()
+                print('Model is loaded...')
 
             if hasattr(model, "conv1x1"):
                 weight_path = os.path.join(model_path, model.conv_weights_path)
                 if os.path.exists(weight_path):
-                    print('weight_path', weight_path)
+                    # print('weight_path', weight_path)
                     print('loading conv1x1 weights...')
                     model.conv1x1.load_state_dict(torch.load(weight_path))
-                    print("model.conv1x1", model.conv1x1.state_dict())
+                    # print("model.conv1x1", model.conv1x1.state_dict())
                 else:
                     print("no weight_path conv1x1")
             else:

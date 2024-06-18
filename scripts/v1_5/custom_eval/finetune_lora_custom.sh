@@ -3,8 +3,7 @@
 # only one of VSR or Whatsup on at the time
 
 export WANDB_API_KEY='6349ed9b917e6fee85da5729128e382f85ee0f53'
-# wandb.init(project="jupyter-proj")
-# export WANDB_PROJECT="jupyter-proj"
+export WANDB_PROJECT="Thesis_runs"
 
 # WANDB_MODE=offline
 epochs=3
@@ -38,7 +37,6 @@ mm_projector_lr=2e-5
 
 # method="no_depth"
 # method="conv"
-# method="conv_hyper_param_lr5_nwd"
 # method="late"
 # method="resnet"
 # method="resnet_fusion"
@@ -46,15 +44,18 @@ mm_projector_lr=2e-5
 # method="method2" # dont forget to change init in model llava_llama, i now import in train_custom
 # method=dino
 # method=dino_late
-method="imagebind"
-# method="fmask"
+# method="imagebind"
+method="imagebind_intermediate"
 
 
-# for method in 'late' ; do
+# for method in 'conv' 'imagebind' ; do
+# for method in 'imagebind_intermediate' ; do
+for dataset in  "VSR_class4" "VSR_f" "VSR_random" ; do
 # for dataset in "VSR_random" ; do
 # for dataset in "VSR" "VSR_f" "Whatsup" ; do
+# for dataset in "VSR_f"  ; do
 # for dataset in "VSR_class4" ; do
-for dataset in "Whatsup" ; do
+# for dataset in "Whatsup" ; do
 
     if [ "$version" = "7b" ]; then
         model_base="liuhaotian/llava-v1.5-7b"
@@ -68,9 +69,11 @@ for dataset in "Whatsup" ; do
         train_file="VSR_train_TF.json"
         val_file="VSR_val_TF.json"
 
-        # CKPT="VSR_TF_epoch${epochs}-${method}-${model}"
-        # CKPT="VSR_TF_plus_BCE_epoch${epochs}-${method}-${model}"
-        CKPT="VSR_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        CKPT="VSR_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_epoch${epochs}-${method}-${model}_freeze_dino"
+        # CKPT="VSR_epoch${epochs}-${method}-${model}_only_lin_proj"
+        # CKPT="VSR_plus_BCE_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -79,7 +82,11 @@ for dataset in "Whatsup" ; do
         train_file="VSR_train_TF_f.json"
         val_file="VSR_val_TF_f.json"
 
-        CKPT="VSR_f_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        # CKPT="VSR_f_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        CKPT="VSR_f_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_f_epoch${epochs}-${method}-${model}_freeze_dino"
+        # CKPT="VSR_f_epoch${epochs}-${method}-${model}_only_lin_proj"
+
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -97,7 +104,9 @@ for dataset in "Whatsup" ; do
         train_file="VSR_random_train_TF.json"
         val_file="VSR_random_validation_TF.json"
 
-        CKPT="VSR_random_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        # CKPT="VSR_random_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        CKPT="VSR_random_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_random_epoch${epochs}-${method}-${model}_freeze_dino"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -115,7 +124,8 @@ for dataset in "Whatsup" ; do
         train_file="VSR_random_train_classification4.json"
         val_file="VSR_random_validation_classification4.json"
 
-        CKPT="VSR_random_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        # CKPT="VSR_random_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        CKPT="VSR_random_class4_epoch${epochs}-${method}-${model}"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -125,14 +135,14 @@ for dataset in "Whatsup" ; do
         train_file="VSR_train_classification4.json"
         val_file="VSR_val_classification4.json"
 
-        # CKPT="VSR4_epoch${epochs}-${method}-${model}_unfrozen_all"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_unfrozen_all"
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_frozen_llm"
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_train_only_conv"
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_only_proj2"
         # CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_no_finetuing"
-        CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
-        # CKPT="VSR4_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
 
         depth_train_file="/project/msc-thesis-project/all_vsr_depth/"
         depth_val_file="/project/msc-thesis-project/all_vsr_depth/"
@@ -183,7 +193,11 @@ for dataset in "Whatsup" ; do
         train_file="whatsup_train_classification_controlled_images.json"
         val_file="whatsup_val_classification_controlled_images.json"
 
-        CKPT="Whatsup_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        # CKPT="Whatsup_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        CKPT="Whatsup_epoch${epochs}-${method}-${model}"
+        # CKPT="Whatsup_epoch${epochs}-${method}-${model}_freeze_dino"
+        # CKPT="Whatsup_epoch${epochs}-${method}-${model}_only_lin_proj"
+
 
         depth_train_file="/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/"
         depth_val_file="/project/msc-thesis-project/forked_repos/whatsup_vlms/data/controlled_depth_images/"
@@ -247,10 +261,12 @@ for dataset in "Whatsup" ; do
         fusion_method="train_custom_fmask.py"
     elif [ "$method" = "imagebind" ]; then
         fusion_method="train_custom_imagebind.py"
+    elif [ "$method" = "imagebind_intermediate" ]; then
+        fusion_method="train_custom_imagebind_intermediate.py"
     else
         echo "Invalid method specified."
         # fusion_method="train_custom.py"
-    fi
+    fi 
 
 
     if [[ "$dataset" == *VSR* ]]; then

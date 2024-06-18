@@ -1,14 +1,22 @@
 import os
 from pathlib import Path
 
+import sys 
+# Add the ImageBind folder to the Python path
+sys.path.append("/project/msc-thesis-project/forked_repos/ImageBind")
+
+# Add the LLaVA folder to the Python path
+sys.path.append("/project/msc-thesis-project/forked_repos/LLaVA")
+
+
 from llava.train.llama_flash_attn_monkey_patch import replace_llama_attn_with_flash_attn
 
 if __name__=="__main__":
     print('using monkey patch')
     replace_llama_attn_with_flash_attn()  # Need to call this before importing transformers.
 
-from llava.model.language_model.llava_llama import LlavaLlamaForCausalLM, AutoModelForCausalLM, LlavaConfig
-from llava.train.train import *
+from llava.model.language_model.llava_llama_imagebind_intermediate import LlavaLlamaForCausalLM, AutoModelForCausalLM, LlavaConfig
+from llava.train.train_for_imagebind_intermediate import *
 import torch.nn as nn
 import torch.nn.init as init
 
@@ -17,27 +25,47 @@ from typing import List, Optional, Tuple, Union
 from datetime import datetime
 dt = datetime.now()
 
+
+from imagebind.models import imagebind_model
+from imagebind.models.imagebind_model import ModalityType
+from imagebind import data
+
+from torchvision import transforms
+from PIL import Image
+def load_and_transform_depth_data(depth_paths, device=None):
+    if depth_paths is None:
+        return None
+
+    depth_ouputs = []
+    for depth_path in depth_paths:
+        data_transform = transforms.Compose(
+            [
+                transforms.Resize(
+                    224, interpolation=transforms.InterpolationMode.BICUBIC
+                ),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                # transforms.Normalize((0.5, ), (0.5, ))  # if I use this normalization, I cannot get good results...
+            ]
+        )
+        with open(depth_path, "rb") as fopen:
+            image = Image.open(fopen).convert("L")
+
+        image = data_transform(image)#.to(device)
+        depth_ouputs.append(image)
+    return torch.stack(depth_ouputs, dim=0)
+
+# Instantiate model
+imagebindm = imagebind_model.imagebind_huge(pretrained=True)
+imagebindm.eval()
+# imagebindm.to(device)
+
 class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     config_class = LlavaConfig
     torch.manual_seed(25)
 
     def __init__(self, config):
         super(DepthLlavaLlamaForCausalLM, self).__init__(config)
-        self.conv1x1 = nn.Conv2d(4, 3, kernel_size=1)#.half()
-        # self.conv1x1 = self.conv1x1.to(self.device)
-        self.conv_weights_path = 'conv1x1_weights.pth'
-        # print('state_dict conv init', self.conv1x1.state_dict()) 
-
-    # TODO: change to _init_weights everywhere
-    def initialize_weights(self):
-        print("CHECK: initialize_weights")
-        nn.init.xavier_uniform_(self.conv1x1.weight, gain=nn.init.calculate_gain('relu'))
-        nn.init.zeros_(self.conv1x1.bias)
-        # print('state_dict conv initialize_weights', self.conv1x1.state_dict()) 
-        file = f"/project/train_custom_conv_state_dict_{dt}.txt"
-        with open(file, "w") as f:
-            f.write(f'state_dict conv after init weights: \n{self.conv1x1.state_dict()}')
-
 
     def forward(
         self,
@@ -56,12 +84,7 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     ):
 
         if inputs_embeds is None:
-            if images is not None and depth_images is not None:
-                # first convert depth to grayscale
-                depth_images = depth_images.mean(dim=1, keepdim=True)
-                images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336]) -> torch.Size([16, 3, 336, 336])
-                # images = torch.cat((images, depth_images), dim=-1)  # dim 1 or -1? #torch.Size([16, 3, 336, 672])
-
+            # if images is not None and depth_images is not None:
             (
                 input_ids,
                 position_ids,
@@ -75,7 +98,8 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
                 attention_mask,
                 past_key_values,
                 labels,
-                images
+                images,
+                depth_images
             )
         
 
@@ -91,7 +115,7 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict
         )
-    
+
     @torch.no_grad()
     def generate(
         self,
@@ -106,28 +130,33 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
         if "inputs_embeds" in kwargs:
             raise NotImplementedError("`inputs_embeds` is not supported")
         
-        # print("DepthLlavaLlamaForCausalLM generate")
-        # print("MRO:", [cls.__name__ for cls in DepthLlavaLlamaForCausalLM.mro()])
-        
-        if images is not None:
-            depth_images = depth_images.mean(dim=1, keepdim=True)
-            images = torch.cat((images, depth_images), dim=1) #torch.Size([16, 4, 336, 336]) -> torch.Size([16, 3, 336, 336])
-            # images = torch.cat((images, depth_images), dim=-1)  # dim 1 or -1? #torch.Size([16, 3, 336, 672])
-            # print("image and depth map concatenated before encoder in generate")
-            
         return super().generate(
             inputs,
             images,
+            depth_images,
             image_sizes=image_sizes,
             **kwargs,
         )
     
-    def encode_images(self, images):
-        # print(type(self.conv1x1)) #<class 'torch.nn.modules.conv.Conv2d'>  
-        # print(type(images)) #<class 'torch.Tensor'>
-        images = self.conv1x1(images)
-        # print("(images.shape na conv1x1", images.shape)
-        return super().encode_images(images)
+    def encode_images(self, images, depth_images=None):
+        global imagebindm
+        image_features = self.get_model().get_vision_tower()(images) #([16, 576, 1024]) 
+
+        depth_images= depth_images.to(self.device)# (1,1,224,224)
+        inputs = {ModalityType.DEPTH: depth_images}
+
+        imagebindm=imagebindm.half().to(self.device)
+        with torch.no_grad():
+            embeddings = imagebindm(inputs)
+
+        depth_features= embeddings[ModalityType.DEPTH].unsqueeze(1) #([16, 1024]) 
+
+        # print('image_features.shape',image_features.shape)
+        # print('depth _features.shape',depth_features.shape)
+        concat_features = torch.cat((image_features, depth_features), dim=1)
+        concat_features = self.get_model().mm_projector(concat_features) #([16, 576, 4096]) 
+        return concat_features
+    
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):
         # print("prepare_inputs_for_generation")
@@ -158,9 +187,12 @@ class DepthSupervisedDataset(LazySupervisedDataset):
         if 'image' in self.list_data_dict[i] and isinstance(self.list_data_dict[i]['image'], str):
             image_name = Path(self.list_data_dict[i]['image']).name
             depth_folder = self.depth_path
-            depth_image = Image.open(os.path.join(depth_folder, image_name)).convert('RGB')
-            processor = self.data_args.image_processor
 
+
+            # instead of preprocessing for llava's clip VE
+            depth_image = Image.open(os.path.join(depth_folder, image_name)).convert('RGB')
+
+            processor = self.data_args.image_processor
             if self.data_args.image_aspect_ratio == 'pad':
                 def expand2square(pil_img, background_color):
                     width, height = pil_img.size
@@ -178,9 +210,21 @@ class DepthSupervisedDataset(LazySupervisedDataset):
                 depth_image = processor.preprocess(depth_image, return_tensors='pt')['pixel_values'][0]
             else:
                 depth_image = processor.preprocess(depth_image, return_tensors='pt')['pixel_values'][0]
+
+            depth_path = os.path.join(depth_folder, image_name)
+            # print('depth_path', depth_path)
+            depth_image= load_and_transform_depth_data([depth_path])[0]
+            # print('type depth_image============2 ', type(depth_image))
+            # print(depth_image.shape)
+
+            # image_path = self.list_data_dict[i]['image']
+            # img= data.load_and_transform_vision_data([image_path], 'cuda:0')[0]
+            # print(type(data_dict['image']))
+            # print('data_dict[image].shape',data_dict['image'].shape)
+            # print(type(img))
+            # print('img.shape',img.shape)
             
             data_dict['depth_image'] = depth_image
-
         return data_dict
 
 
@@ -222,6 +266,7 @@ def train():
     global local_rank
 
     Freeze_VLM=False
+    Freeze_imagebind=True
 
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments))
@@ -231,6 +276,7 @@ def train():
 
     bnb_model_from_pretrained_args = {}
     if training_args.bits in [4, 8]:
+        print('hier bij fill in bnb_model_from_pretrained_args')
         from transformers import BitsAndBytesConfig
         bnb_model_from_pretrained_args.update(dict(
             device_map={"": training_args.device},
@@ -265,7 +311,6 @@ def train():
                 cache_dir=training_args.cache_dir,
                 **bnb_model_from_pretrained_args
             )
-            model.initialize_weights()
     else:
         model = transformers.LlamaForCausalLM.from_pretrained(
             model_args.model_name_or_path,
@@ -368,7 +413,7 @@ def train():
                 p.requires_grad = True
 
         model.config.freeze_mm_mlp_adapter = training_args.freeze_mm_mlp_adapter
-        if training_args.freeze_mm_mlp_adapter:
+        if training_args.freeze_mm_mlp_adapter: # what is the mm_mlp_adapter?
             for p in model.get_model().mm_projector.parameters():
                 p.requires_grad = False
 
@@ -380,12 +425,17 @@ def train():
             model.model.requires_grad_(False)
             for p in model.get_model().mm_projector.parameters():
                 p.requires_grad = False
-
-        model.conv1x1.requires_grad_(True)
+        
+        if Freeze_imagebind:
+            for p in imagebindm.parameters():
+                p.requires_grad = False
+        else:
+            for p in imagebindm.parameters():
+                p.requires_grad = True
 
         from peft.tuners.lora import LoraLayer
         model_name = model.__class__.__name__
-        file = f"/project/model_states/train_custom_conv_all_requires_grad_{dt}.txt"
+        file = f"/project/model_states/train_custom_imagebind_all_requires_grad_{dt}.txt"
         with open(file, "w") as f:
             f.write(f"Model name: {model_name}\n")
             for name, param in model.named_parameters():
@@ -407,14 +457,6 @@ def train():
                         total_lora_params += param.numel()
             f.write(f"Trainable parameters in LoRA layers: {trainable_lora_params}\n")
             f.write(f"Total parameters in LoRA layers: {total_lora_params}\n")
-
-        file = f"/project/model_states/train_conv_mm_proj_{dt}.txt"
-        with open(file, "w") as f:
-            for name, param in model.get_model().mm_projector.named_parameters():
-                f.write(f"Parameter: {name}\n")
-                f.write(f"{param}\n")
-                f.write("----------------------------------------------")
-                f.write("\n")
 
 
         model.config.mm_use_im_start_end = data_args.mm_use_im_start_end = model_args.mm_use_im_start_end
@@ -457,19 +499,6 @@ def train():
     torch.cuda.empty_cache()
     model.config.use_cache = True
 
-    conv1x1_state_dict = model.conv1x1.state_dict()
-    # Check for NaNs, -inf, and inf 
-    weight_has_issue = torch.isnan(conv1x1_state_dict['weight']).any() or torch.isinf(conv1x1_state_dict['weight']).any()
-    bias_has_issue = torch.isnan(conv1x1_state_dict['bias']).any() or torch.isinf(conv1x1_state_dict['bias']).any()
-
-    # Print the results
-    print("Weight has NaN, -inf, or inf:", weight_has_issue)
-    print("Bias has NaN, -inf, or inf:", bias_has_issue)
-
-    # print('state_dict conv before save', conv1x1_state_dict) 
-    weight_path = os.path.join(training_args.output_dir, model.conv_weights_path)
-    print('weight path', weight_path)
-    torch.save(conv1x1_state_dict, weight_path)
 
     if training_args.lora_enable:
         state_dict = get_peft_state_maybe_zero_3(
@@ -485,20 +514,6 @@ def train():
     else:
         safe_save_model_for_hf_trainer(trainer=trainer,
                                        output_dir=training_args.output_dir)
-
-    file = f"/project/model_states/train_custom_conv_state_dict_{dt}.txt"
-    with open(file, "a") as f:
-        f.write('====================after=======================')
-        f.write(f'state_dict conv before save: \n{conv1x1_state_dict}')
-
-    file = f"/project/model_states/train_conv_mm_proj_{dt}.txt"
-    with open(file, "a") as f:
-        f.write("=====================after===============================")
-        for name, param in model.get_model().mm_projector.named_parameters():
-            f.write(f"Parameter: {name}\n")
-            f.write(f"{param}\n")
-            f.write("----------------------------------------------")
-            f.write("\n")
 
 
 if __name__ == "__main__":

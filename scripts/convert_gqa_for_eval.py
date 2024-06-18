@@ -15,4 +15,6 @@ for line_idx, line in enumerate(open(args.src)):
     all_answers.append({"questionId": question_id, "prediction": text})
 
 with open(args.dst, 'w') as f:
-    json.dump(all_answers, f)
+    # json.dump(all_answers, f)
+    f.write(json.dumps(all_answers) + '\n')
+
