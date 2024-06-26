@@ -83,6 +83,7 @@ def eval_model(args):
             question = row['question']
             hint = row['hint']
             image = load_image_from_base64(row['image'])
+            # print('dpeth map path', args.depth_image_folder.format(idx))
             depth_image = Image.open(args.depth_image_folder.format(idx)).convert('RGB')
 
             if not is_none(hint):

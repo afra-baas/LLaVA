@@ -8,7 +8,8 @@ import shortuuid
 
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.conversation import conv_templates, SeparatorStyle
-from llava.model.builder import load_pretrained_model
+# from llava.model.builder import load_pretrained_model
+from llava.model.builder_depth_imagebind_intermediate import load_pretrained_model, load_and_transform_depth_data
 from llava.utils import disable_torch_init
 from llava.mm_utils import tokenizer_image_token, process_images, load_image_from_base64, get_model_name_from_path
 
@@ -82,6 +83,8 @@ def eval_model(args):
             question = row['question']
             hint = row['hint']
             image = load_image_from_base64(row['image'])
+            # depth_image = Image.open(args.depth_image_folder.format(idx)).convert('RGB')
+
             if not is_none(hint):
                 question = hint + '\n' + question
             for option_char, option in zip(all_options[:len(options)], options):
@@ -106,11 +109,17 @@ def eval_model(args):
             input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, return_tensors='pt').unsqueeze(0).cuda()
 
             image_tensor = process_images([image], image_processor, model.config)[0]
+            # depth_image_tensor = process_images([depth_image], image_processor, model.config)[0]
+
+            depth_path = args.depth_image_folder.format(idx)
+            # print('depth_path', depth_path)
+            depth_image_tensor= load_and_transform_depth_data([depth_path])[0]
 
             with torch.inference_mode():
                 output_ids = model.generate(
                     input_ids,
                     images=image_tensor.unsqueeze(0).half().cuda(),
+                    depth_images=depth_image_tensor.unsqueeze(0).half().cuda(),
                     image_sizes=[image.size],
                     do_sample=True if args.temperature > 0 else False,
                     temperature=args.temperature,

@@ -48,8 +48,6 @@ def eval_model(args):
         if 'image' in line:
             image_file = line["image"]
             if image_file.startswith("http") or image_file.startswith("https"):
-                # response = requests.get(image_file)
-                # image = Image.open(BytesIO(response.content)).convert('RGB')
                 response =requests.get(image_file, stream=True)
                 image = Image.open(response.raw).convert('RGB')
             else:
@@ -66,7 +64,10 @@ def eval_model(args):
             else:
                 depth_path=args.depth_path
                 
-            depth_image = Image.open(os.path.join(depth_path, image_file.split('/')[-1])).convert('RGB')
+            if 'scienceqa' in depth_path:
+                depth_image = Image.open(os.path.join(depth_path, image_file.split('/')[-2]+'.png')).convert('RGB')
+            else:
+                depth_image = Image.open(os.path.join(depth_path, image_file.split('/')[-1])).convert('RGB')
             depth_tensor = image_processor.preprocess(depth_image, return_tensors='pt')['pixel_values'][0]
             depth_images = depth_tensor.unsqueeze(0).half().cuda()
             depth_image_sizes = [depth_image.size]
@@ -79,6 +80,7 @@ def eval_model(args):
         else:
             print('====================hierr daarom images is None')
             images = None
+            depth_images=None
             image_sizes = None
             depth_image_sizes = None
 

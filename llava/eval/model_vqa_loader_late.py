@@ -89,7 +89,7 @@ class CustomDataset(Dataset):
 
         image_tensor = process_images([image], self.image_processor, self.model_config)[0]
         depth_image_tensor = process_images([depth_image], self.image_processor, self.model_config)[0]
-        print('depth_image_tensor', depth_image_tensor.shape)
+        # print('depth_image_tensor', depth_image_tensor.shape)
 
         ## preprocess depth image with clip for all methods!!
 

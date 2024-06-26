@@ -8,7 +8,7 @@ import shortuuid
 from llava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN
 from llava.conversation import conv_templates, SeparatorStyle
 # from llava.model.builder import load_pretrained_model
-from llava.model.builder_depth_mlp import load_pretrained_model
+from llava.model.builder_depth_imagebind_intermediate import load_pretrained_model, load_and_transform_depth_data
 from llava.utils import disable_torch_init
 from llava.mm_utils import tokenizer_image_token, process_images, get_model_name_from_path
 from torch.utils.data import Dataset, DataLoader
@@ -82,14 +82,18 @@ class CustomDataset(Dataset):
                             image = Image.open(image_data).convert('RGB')
                     except Exception as e:
                         print(f"Failed to download image from URL: {url}. Status code: {response.status_code}")
-            depth_image= Image.open(os.path.join(self.depth_image_folder, image_file)).convert('RGB')
+            # depth_image= Image.open(os.path.join(self.depth_image_folder, image_file)).convert('RGB')
         else:
             image = Image.open(os.path.join(self.image_folder, image_file)).convert('RGB')
-            depth_image = Image.open(os.path.join(self.depth_image_folder, image_file)).convert('RGB')
+            # depth_image = Image.open(os.path.join(self.depth_image_folder, image_file)).convert('RGB')
 
         image_tensor = process_images([image], self.image_processor, self.model_config)[0]
-        depth_image_tensor = process_images([depth_image], self.image_processor, self.model_config)[0]
+        # depth_image_tensor = process_images([depth_image], self.image_processor, self.model_config)[0]
         # print('depth_image_tensor', depth_image_tensor.shape)
+
+        depth_path = os.path.join(self.depth_image_folder, image_file)
+        # print('depth_path', depth_path)
+        depth_image_tensor= load_and_transform_depth_data([depth_path])[0]
 
         ## preprocess depth image with clip for all methods!!
 

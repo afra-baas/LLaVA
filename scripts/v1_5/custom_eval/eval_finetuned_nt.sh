@@ -74,7 +74,7 @@ fi
 if [ "$method" = "no_depth" ]; then
     eval_file="llava.eval.model_vqa_science" 
 elif [ "$method" = "conv" ]; then
-    eval_file="llava.eval.model_vqa_science_depth" 
+    eval_file="llava.eval.model_vqa_science_conv" 
 elif [ "$method" = "mlp" ]; then
     eval_file="llava.eval.model_vqa_science_depth_mlp" 
 elif [ "$method" = "method2" ]; then
@@ -89,7 +89,6 @@ elif [ "$method" = "dino" ]; then
     eval_file="llava.eval.model_vqa_science_dino"
 else
     echo "Invalid method specified."
-    # eval_file="llava.eval.model_vqa_science_depth"
 fi
 
 

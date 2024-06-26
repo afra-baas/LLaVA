@@ -151,6 +151,13 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
 
         depth_features= embeddings[ModalityType.DEPTH].unsqueeze(1) #([16, 1024]) 
 
+        # Normalize both feature sets
+        # print('image_features', image_features)
+        # image_features = torch.nn.functional.normalize(image_features, dim=-1)
+        # depth_features = torch.nn.functional.normalize(depth_features, dim=-1)
+        # print('image_features after', image_features)
+
+
         # print('image_features.shape',image_features.shape)
         # print('depth _features.shape',depth_features.shape)
         concat_features = torch.cat((image_features, depth_features), dim=1)
@@ -266,7 +273,7 @@ def train():
     global local_rank
 
     Freeze_VLM=False
-    Freeze_imagebind=True
+    Freeze_imagebind=False
 
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments))

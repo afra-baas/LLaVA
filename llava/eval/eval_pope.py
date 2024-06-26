@@ -1,6 +1,7 @@
 import os
 import json
 import argparse
+import sys
 
 def calculate_metrics(TP, TN, FP, FN):
     if TP + FP == 0:
@@ -95,16 +96,22 @@ if __name__ == "__main__":
     parser.add_argument("--annotation-dir", type=str)
     parser.add_argument("--question-file", type=str)
     parser.add_argument("--result-file", type=str)
+    parser.add_argument("--output-file", type=str)
     args = parser.parse_args()
 
     questions = [json.loads(line) for line in open(args.question_file)]
     questions = {question['question_id']: question for question in questions}
     answers = [json.loads(q) for q in open(args.result_file)]
-    for file in os.listdir(args.annotation_dir):
-        assert file.startswith('coco_pope_')
-        assert file.endswith('.json')
-        category = file[10:-5]
-        cur_answers = [x for x in answers if questions[x['question_id']]['category'] == category]
-        print('Category: {}, # samples: {}'.format(category, len(cur_answers)))
-        eval_pope(cur_answers, os.path.join(args.annotation_dir, file))
-        print("====================================")
+
+    # os.makedirs(args.output_file, exist_ok=True)
+    with open(args.output_file, 'w') as f:
+        sys.stdout = f
+        for file in os.listdir(args.annotation_dir):
+            assert file.startswith('coco_pope_')
+            assert file.endswith('.json')
+            category = file[10:-5]
+            cur_answers = [x for x in answers if questions[x['question_id']]['category'] == category]
+            print('Category: {}, # samples: {}'.format(category, len(cur_answers)))
+            eval_pope(cur_answers, os.path.join(args.annotation_dir, file))
+            print("====================================")
+        sys.stdout = sys.__stdout__

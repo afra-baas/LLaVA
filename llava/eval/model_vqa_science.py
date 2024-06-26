@@ -66,7 +66,7 @@ def eval_model(args):
             image_sizes = None
 
         if args.single_pred_prompt:
-            print('single_pred_prompt is true')
+            # print('single_pred_prompt is true')
             qs = qs + '\n' + "Answer with the option's letter from the given choices directly."
             cur_prompt = cur_prompt + '\n' + "Answer with the option's letter from the given choices directly."
         # print('cur_prompt', cur_prompt)

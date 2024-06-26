@@ -37,8 +37,11 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
 
         self.dino_feature_extractor = AutoImageProcessor.from_pretrained('facebook/dinov2-base')
         self.dino_model = AutoModel.from_pretrained('facebook/dinov2-base')
-        # self.linear_projection = nn.Linear(768, 1024)
-        self.linear_projection = nn.Linear(768, 4096)
+        self.dino_direct=False
+        if self.dino_direct:
+            self.linear_projection = nn.Linear(768, 4096)
+        else:
+            self.linear_projection = nn.Linear(768, 1024)
         
     def initialize_weights(self):
         print("CHECK: initialize_weights")
@@ -118,37 +121,43 @@ class DepthLlavaLlamaForCausalLM(LlavaLlamaForCausalLM):
     
     def encode_images(self, images, depth_images=None):
 
-        # image_features = self.get_model().get_vision_tower()(images) # torch.Size([16, 576, 1024])   
+        if self.dino_direct: #(late)
+            image_features = self.get_model().get_vision_tower()(images) # torch.Size([1, 576, 1024])   
+            image_features = self.get_model().mm_projector(image_features) #([1, 576, 4096]) 
 
-        # # Preprocess the depth maps
-        # inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
-        # inputs = inputs.to(self.dino_model.device) 
-        # outputs = self.dino_model(**inputs) 
-        # depth_features = outputs[0] # [16, 257, 768]
-        # depth_features = self.linear_projection(depth_features)
+            # Preprocess the depth maps
+            inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
+            inputs = inputs.to(self.dino_model.device)
+            outputs = self.dino_model(**inputs)
+            depth_features = outputs[0]
+            depth_features = self.linear_projection(depth_features)
 
-        # # print('shapes', image_features.shape, depth_features.shape) # shapes torch.Size([16, 576, 1024]) torch.Size([16, 257, 768])  
-        # concatenated_embedding = torch.cat((image_features, depth_features), dim=1)
-        # # print('concatenated_embedding', concatenated_embedding.shape) # concatenated_embedding torch.Size([16, 833, 1024]) 
+            # print('shapes', image_features.shape, depth_features.shape) # shapes torch.Size([16, 576, 4096]) torch.Size([16, 257, 4096])  
+            concatenated_embedding = torch.cat((image_features, depth_features), dim=1)
+            # print('concatenated_embedding', concatenated_embedding.shape) # concatenated_embedding torch.Size([16, 833, 4096]) 
+            return concatenated_embedding
+    
+        else:
+            image_features = self.get_model().get_vision_tower()(images) # torch.Size([16, 576, 1024])   
 
-        # image_features = self.get_model().mm_projector(concatenated_embedding)
-        # return image_features
+            # Preprocess the depth maps
+            # print(depth_images.shape)
 
+            # added for pope and gqa
+            depth_images = torch.clamp(depth_images, 0.0, 1.0)
+            inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
+            inputs = inputs.to(self.dino_model.device) 
+            outputs = self.dino_model(**inputs) 
+            depth_features = outputs[0] # [16, 257, 768]
+            depth_features = self.linear_projection(depth_features)
 
-        image_features = self.get_model().get_vision_tower()(images) # torch.Size([1, 576, 1024])   
-        image_features = self.get_model().mm_projector(image_features) #([1, 576, 4096]) 
+            # print('shapes', image_features.shape, depth_features.shape) # shapes torch.Size([16, 576, 1024]) torch.Size([16, 257, 768])  
+            concatenated_embedding = torch.cat((image_features, depth_features), dim=1)
+            # print('concatenated_embedding', concatenated_embedding.shape) # concatenated_embedding torch.Size([16, 833, 1024]) 
 
-        # Preprocess the depth maps
-        inputs = self.dino_feature_extractor(images=depth_images, return_tensors="pt")
-        inputs = inputs.to(self.dino_model.device)
-        outputs = self.dino_model(**inputs)
-        depth_features = outputs[0]
-        depth_features = self.linear_projection(depth_features)
+            image_features = self.get_model().mm_projector(concatenated_embedding)
+            return image_features
 
-        # print('shapes', image_features.shape, depth_features.shape) # shapes torch.Size([16, 576, 4096]) torch.Size([16, 257, 4096])  
-        concatenated_embedding = torch.cat((image_features, depth_features), dim=1)
-        # print('concatenated_embedding', concatenated_embedding.shape) # concatenated_embedding torch.Size([16, 833, 4096]) 
-        return concatenated_embedding
     
 
     def prepare_inputs_for_generation(self, input_ids, past_key_values=None, inputs_embeds=None, **kwargs):

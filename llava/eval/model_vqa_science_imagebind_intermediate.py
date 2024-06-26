@@ -61,7 +61,10 @@ def eval_model(args):
                 depth_path=args.depth_path
                 
 
-            depth_path = os.path.join(depth_path, image_file.split('/')[-1])
+            if 'scienceqa' in depth_path:
+                depth_path = os.path.join(depth_path, image_file.split('/')[-2]+'.png')
+            else:
+                depth_path = os.path.join(depth_path, image_file.split('/')[-1])
             # print('depth_path', depth_path)
             depth_images= load_and_transform_depth_data([depth_path])[0]
             depth_images = depth_images.unsqueeze(0).half().cuda()
@@ -80,6 +83,7 @@ def eval_model(args):
         else:
             print('====================hierr daarom images is None')
             images = None
+            depth_images=None
             image_sizes = None
             # depth_image_sizes = None
 

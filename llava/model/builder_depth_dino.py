@@ -27,7 +27,7 @@ from llava.train.train_custom_dino import *
 
 def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto", device="cuda"):
     
-    Freeze_VLM=True
+    Freeze_VLM=False
     # Freeze_dino=True
     
     kwargs = {"device_map": device_map}

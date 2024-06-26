@@ -459,6 +459,7 @@ for k, _ in detailedMetrics:
 
 
 # Open a file in write mode
+os.makedirs(os.path.dirname(args.output_dir), exist_ok=True)
 with open(f"{args.output_dir}", "w") as f:
     # Redirect the standard output to the file
     original_stdout = sys.stdout

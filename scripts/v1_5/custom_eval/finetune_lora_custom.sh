@@ -7,10 +7,10 @@ export WANDB_PROJECT="Thesis_runs"
 
 # WANDB_MODE=offline
 epochs=3
-version="7b"
-device=0
-train_batchsize=16
-eval_batchsize=16
+version="13b"
+device=1
+train_batchsize=4
+eval_batchsize=4
 weight_decay=0.
 lr=2e-4
 warmup_ratio=0.03
@@ -43,18 +43,20 @@ mm_projector_lr=2e-5
 # method="mlp"
 # method="method2" # dont forget to change init in model llava_llama, i now import in train_custom
 # method=dino
+# method=dino_direct
 # method=dino_late
 # method="imagebind"
-method="imagebind_intermediate"
+method="imagebind_train_only_lin_proj"
+# method="imagebind_intermediate_unfrozen_imagebind"
 
 
 # for method in 'conv' 'imagebind' ; do
 # for method in 'imagebind_intermediate' ; do
-for dataset in  "VSR_class4" "VSR_f" "VSR_random" ; do
+# for dataset in "VSR" "VSR_f" "Whatsup" ; do
 # for dataset in "VSR_random" ; do
 # for dataset in "VSR" "VSR_f" "Whatsup" ; do
-# for dataset in "VSR_f"  ; do
-# for dataset in "VSR_class4" ; do
+# for dataset in "VSR"  ; do
+for dataset in "VSR_class4" ; do
 # for dataset in "Whatsup" ; do
 
     if [ "$version" = "7b" ]; then
@@ -255,13 +257,19 @@ for dataset in  "VSR_class4" "VSR_f" "VSR_random" ; do
         fusion_method="train_custom_de.py"
     elif [ "$method" = "dino" ]; then
         fusion_method="train_custom_dino.py"
+    elif [ "$method" = "dino_direct" ]; then
+        fusion_method="train_custom_dino.py"
     elif [ "$method" = "dino_late" ]; then
         fusion_method="train_custom_dino_late.py"
     elif [ "$method" = "fmask" ]; then
         fusion_method="train_custom_fmask.py"
     elif [ "$method" = "imagebind" ]; then
         fusion_method="train_custom_imagebind.py"
+    elif [ "$method" = "imagebind_train_only_lin_proj" ]; then
+        fusion_method="train_custom_imagebind.py"
     elif [ "$method" = "imagebind_intermediate" ]; then
+        fusion_method="train_custom_imagebind_intermediate.py"
+    elif [ "$method" = "imagebind_intermediate_unfrozen_imagebind" ]; then
         fusion_method="train_custom_imagebind_intermediate.py"
     else
         echo "Invalid method specified."
