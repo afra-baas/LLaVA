@@ -273,7 +273,7 @@ def train():
     global local_rank
 
     Freeze_VLM=False
-    Freeze_imagebind=False
+    Freeze_imagebind=True
 
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments))

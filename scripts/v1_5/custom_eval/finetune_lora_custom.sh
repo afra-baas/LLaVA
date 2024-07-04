@@ -7,7 +7,7 @@ export WANDB_PROJECT="Thesis_runs"
 
 # WANDB_MODE=offline
 epochs=3
-version="13b"
+version="7b"
 device=1
 train_batchsize=4
 eval_batchsize=4
@@ -46,8 +46,9 @@ mm_projector_lr=2e-5
 # method=dino_direct
 # method=dino_late
 # method="imagebind"
-method="imagebind_train_only_lin_proj"
+# method="imagebind_train_only_lin_proj"
 # method="imagebind_intermediate_unfrozen_imagebind"
+method="imagebind_intermediate"
 
 
 # for method in 'conv' 'imagebind' ; do
@@ -55,8 +56,8 @@ method="imagebind_train_only_lin_proj"
 # for dataset in "VSR" "VSR_f" "Whatsup" ; do
 # for dataset in "VSR_random" ; do
 # for dataset in "VSR" "VSR_f" "Whatsup" ; do
-# for dataset in "VSR"  ; do
-for dataset in "VSR_class4" ; do
+for dataset in "VSR"  ; do
+# for dataset in "VSR_class4" ; do
 # for dataset in "Whatsup" ; do
 
     if [ "$version" = "7b" ]; then
@@ -304,7 +305,8 @@ for dataset in "VSR_class4" ; do
     # python /project/msc-thesis-project/forked_repos/LLaVA/llava/train/$fusion_method \
     # deepspeed /project/msc-thesis-project/forked_repos/LLaVA/llava/train/$fusion_method \
     # CUDA_VISIBLE_DEVICES=0 python /project/msc-thesis-project/forked_repos/LLaVA/llava/train/$fusion_method \
-    CUDA_VISIBLE_DEVICES=$device python /project/msc-thesis-project/forked_repos/LLaVA/llava/train/$fusion_method \
+    # CUDA_VISIBLE_DEVICES=$device python /project/msc-thesis-project/forked_repos/LLaVA/llava/train/$fusion_method \
+    deepspeed /project/msc-thesis-project/forked_repos/LLaVA/llava/train/$fusion_method \
         --lora_enable True --lora_r 128 --lora_alpha 256 --mm_projector_lr $mm_projector_lr \
         --model_name_or_path $model_base \
         --version v1 \

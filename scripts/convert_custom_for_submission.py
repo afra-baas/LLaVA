@@ -132,7 +132,10 @@ def eval_single(result_file, data, TF):
                     # if row['prompt'].split('\n')[4].startswith('C:'):
                     #     option_a=row['prompt'].split('\n')[2]
                     #     option_a=row['prompt'].split('\n')[2]
-                    caption = f"Answer: {mapping[row['text']]}  GT: {mapping[GT]}"
+                    if row['text'] not in mapping.keys():
+                        caption = f"Answer: {row['text']}  GT: {mapping[GT]}"
+                    else:
+                        caption = f"Answer: {mapping[row['text']]}  GT: {mapping[GT]}"
 
                 # save_with_caption([image], f"{filename}_{caption}", caption)
                 save_with_caption([image], filename, caption)

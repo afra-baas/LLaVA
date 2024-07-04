@@ -3,7 +3,7 @@
 # answers-file , hier worden de model answers geoutput
 
 
-device=1
+device=0
 
 gpu_list="${CUDA_VISIBLE_DEVICES:-$device}"
 IFS=',' read -ra GPULIST <<< "$gpu_list"
@@ -33,12 +33,12 @@ version="7b"
 # method="conv"
 # method="mlp"
 # method="method2" # dont forget to change init in model llava_llama
-method="dino"
+# method="dino"
 # method="dino_late"
 # method="dino_direct"
 # method="imagebind"
 # method="imagebind_intermediate_unfrozen_imagebind"
-# method="imagebind_intermediate"
+method="imagebind_intermediate"
 # method="no_depth"
 
 # "no_depth" "conv" "dino" "late"
@@ -46,11 +46,12 @@ method="dino"
 # for method in "dino" "imagebind" ; do
 # for method in "dino" "conv" "imagebind" ; do
 # for method in "no_depth" "conv" ; do
-# for dataset in "VSR" "VSR_f" "Whatsup" ; do
+# for dataset in "VSR" "VSR_random" ; do
+for dataset in "VSR_class4" ; do
 # for method in "imagebind" ; do
 # for method in "imagebind_intermediate" ; do
 # for method in "fmask" ; do
-for dataset in  "Whatsup" ; do
+# for dataset in  "Whatsup" ; do
 # for dataset in  "VSR_class4" "VSR_f" ; do
 
     TF="False"
@@ -65,7 +66,7 @@ for dataset in  "Whatsup" ; do
     ################################## VSR ###################################################
     if [ "$dataset" = "VSR" ]; then
         TF="True"
-        CKPT="VSR_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_class_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_BCE_TF_epoch${epochs}-${method}-${model}"
@@ -73,6 +74,8 @@ for dataset in  "Whatsup" ; do
         # CKPT="VSR_plus_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_TF_plus_BCE_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        # CKPT="VSR_random_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        CKPT="Whatsup_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
 
 
@@ -101,12 +104,15 @@ for dataset in  "Whatsup" ; do
     elif [ "$dataset" = "VSR_random" ]; then
         TF="True"
 
-        CKPT="VSR_random_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_TF_epoch${epochs}-${method}-${model}"
         # CKPT="VSR2_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_class4_epoch${epochs}-${method}-${model}"
         # CKPT="epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        # CKPT="VSR_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+        CKPT="Whatsup_epoch${epochs}-${method}-${model}_train_only_lin_proj"
+
 
         depth_path="/project/msc-thesis-project/all_vsr_depth" 
         root="/project/msc-thesis-project/forked_repos/LLaVA/playground/data/eval/custom2/answers_folder/VSR_random"
@@ -139,12 +145,12 @@ for dataset in  "Whatsup" ; do
     elif [ "$dataset" = "VSR_class4" ]; then
         # CKPT="VSR_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_f_epoch${epochs}-${method}-${model}"
-        # CKPT="Whatsup_epoch${epochs}-${method}-${model}"
+        CKPT="Whatsup_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
 
         # CKPT="Whatsup_epoch${epochs}-${method}-${model}_train_only_lin_proj"
 
-        CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_imagebind"
         # CKPT="VSR_class4_epoch${epochs}-${method}-${model}_train_only_lin_proj"
         # CKPT="VSR4_epoch${epochs}-${method}-${model}_train_only_conv"
@@ -173,9 +179,9 @@ for dataset in  "Whatsup" ; do
 
     ################################## Whats Up ###################################################
     elif [ "$dataset" = "Whatsup" ]; then
-        # CKPT="VSR_epoch${epochs}-${method}-${model}"
+        CKPT="VSR_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_f_epoch${epochs}-${method}-${model}"
-        CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
+        # CKPT="VSR_class4_epoch${epochs}-${method}-${model}"
         # CKPT="VSR_random_epoch${epochs}-${method}-${model}"
 
         # CKPT="VSR_f_epoch${epochs}-${method}-${model}_train_only_lin_proj"
